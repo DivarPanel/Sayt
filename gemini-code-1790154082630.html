@@ -171,9 +171,9 @@
         }
 
         .card-content { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 15px; color: var(--text-main); }
-        .info-group { margin-bottom: 12px; }
-        .info-label { font-size: 0.8rem; text-transform: uppercase; color: var(--accent-color); font-weight: 600; margin-bottom: 3px; }
+        .card-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 10px; color: var(--text-main); }
+        .info-group { margin-top: 10px; }
+        .info-label { font-size: 0.8rem; text-transform: uppercase; color: var(--accent-color); font-weight: 600; margin-bottom: 2px; }
         .info-value { font-size: 0.95rem; color: var(--text-muted); }
 
         .fixed-whatsapp {
@@ -253,6 +253,7 @@
                         let size    = String(row[3] || "").trim();
                         let image   = String(row[4] || "").trim();
                         let code    = String(row[5] || "").trim();
+                        let desc    = String(row[6] || "").trim(); // Açıqlama sütunu
 
                         let key = "";
                         if (catText.includes("green") || catText.includes("yaşıl") || catText.includes("зелень") || catText.includes("ot")) key = "green";
@@ -268,7 +269,8 @@
                                 price: price,
                                 size: size,
                                 image: image,
-                                code: code
+                                code: code,
+                                desc: desc
                             });
                         }
                     }
@@ -288,13 +290,14 @@
                                 <div class="card">
                                     <div class="card-img-container ${isBambuk ? 'large-img-container' : ''}" onclick="orderOnWhatsApp('${item.title} (${item.code})')">
                                         <img src="${item.image}" alt="${item.title}">
-                                        ${item.code ? `<div class="card-badge">${item.code}</div>` : ''}
+                                        ${item.code ? `<div class="card-badge">Kod: ${item.code}</div>` : ''}
                                         ${item.price ? `<div class="price-badge">${item.price}</div>` : ''}
                                         <div class="order-overlay">Sifariş etmək üçün klikləyin 💬</div>
                                     </div>
                                     <div class="card-content">
                                         <h3 class="card-title">${item.title}</h3>
                                         ${item.size ? `<div class="info-group"><div class="info-label">Ölçü</div><div class="info-value">${item.size}</div></div>` : ''}
+                                        ${item.desc ? `<div class="info-group"><div class="info-label">Açıqlama</div><div class="info-value">${item.desc}</div></div>` : ''}
                                     </div>
                                 </div>
                             `;
