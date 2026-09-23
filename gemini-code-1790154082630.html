@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DivarPanel Studio ve Dizayn | Rəsmi Kataloq</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --card-bg: #181c24;
+            --accent-color: #d4af37;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2d333b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: #141820;
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a.active, nav a:hover { color: var(--accent-color); }
+
+        header {
+            text-align: center;
+            padding: 50px 20px 30px;
+            background: linear-gradient(to bottom, #141820, var(--bg-color));
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        header p { color: var(--text-muted); font-size: 1.1rem; max-width: 700px; margin: 0 auto; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; flex-grow: 1; }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .card-img-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+            background-color: #141820;
+            cursor: pointer;
+        }
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img-container img { transform: scale(1.05); }
+
+        .order-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(15, 17, 21, 0.85);
+            color: var(--accent-color);
+            text-align: center;
+            padding: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            z-index: 2;
+        }
+
+        .card-img-container:hover .order-overlay { transform: translateY(0); }
+
+        .card-badge {
+            position: absolute;
+            top: 15px; left: 15px;
+            background-color: rgba(15, 17, 21, 0.85);
+            color: var(--accent-color);
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            z-index: 2;
+        }
+
+        .price-badge {
+            position: absolute;
+            top: 15px; right: 15px;
+            background-color: var(--accent-color);
+            color: #0f1115;
+            padding: 6px 14px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 20px;
+            z-index: 2;
+        }
+
+        .card-content { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 15px; color: var(--text-main); }
+        .info-group { margin-bottom: 12px; }
+        .info-label { font-size: 0.8rem; text-transform: uppercase; color: var(--accent-color); font-weight: 600; margin-bottom: 3px; }
+        .info-value { font-size: 0.95rem; color: var(--text-muted); }
+
+        .fixed-whatsapp {
+            position: fixed; bottom: 25px; right: 25px;
+            background-color: #25d366; color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 9999; text-decoration: none;
+        }
+        .fixed-whatsapp svg { width: 35px; height: 35px; fill: white; }
+
+        footer { text-align: center; padding: 40px; background-color: #0b0d10; color: var(--text-muted); border-top: 1px solid var(--border-color); margin-top: auto; }
+        footer .signature { color: var(--accent-color); font-weight: 600; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#home">Ana Səhifə</a>
+        <a href="#green">Yaşıllıq</a>
+        <a href="#cita">Çita</a>
+        <a href="#laminat">Laminatlar</a>
+        <a href="#qaya">Qaya</a>
+        <a href="#guzgu">Güzgü</a>
+        <a href="#bambuk">Bambuk</a>
+    </nav>
+
+    <header id="home">
+        <h1>DivarPanel Studio ve Dizayn</h1>
+        <p>İnteryeriniz üçün eksklüziv dekorativ panellər, süni yaşıllıq, çita, laminat, qaya, güzgü və bambuk modelləri.</p>
+    </header>
+
+    <div class="container" id="catalog-container">
+        <p style="text-align: center; color: var(--text-muted);">Məhsullar yüklənir...</p>
+    </div>
+
+    <a href="https://wa.me/994702283682?text=Salam,%20suallarım%20var." class="fixed-whatsapp" target="_blank">
+        <svg viewBox="0 0 32 32">
+            <path d="M16.002 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.135 8.048l-2.135 7.799 8.006-2.102c2.348 1.281 5.013 1.957 7.724 1.957 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16.002 29.333c-2.42 0-4.786-0.651-6.852-1.884l-0.491-0.292-5.094 1.338 1.359-4.966-0.319-0.507c-1.341-2.128-2.049-4.595-2.049-7.121 0-7.353 5.981-13.333 13.333-13.333s13.333 5.981 13.333 13.333c0 7.353-5.981 13.333-13.333 13.333zM21.905 19.467c-0.317-0.158-1.874-0.925-2.165-1.031-0.292-0.106-0.503-0.158-0.715 0.158s-0.82 1.031-1.005 1.243c-0.185 0.212-0.371 0.239-0.688 0.081-0.317-0.158-1.34-0.494-2.553-1.574-0.943-0.84-1.579-1.876-1.765-2.193-0.185-0.317-0.02-0.489 0.139-0.647 0.143-0.142 0.317-0.371 0.475-0.556 0.158-0.185 0.211-0.317 0.317-0.529 0.106-0.212 0.053-0.397-0.026-0.556s-0.715-1.724-0.98-2.362c-0.259-0.619-0.523-0.535-0.715-0.545-0.185-0.01-0.397-0.012-0.608-0.012s-0.556 0.079-0.847 0.397-0.292 0.317-1.112 1.086-1.112 2.647s1.139 3.071 1.297 3.284c0.158 0.212 2.241 3.42 5.428 4.796 0.758 0.327 1.349 0.523 1.809 0.671 0.761 0.242 1.454 0.208 2.001 0.126 0.61-0.092 1.874-0.767 2.138-1.508 0.264-0.741 0.264-1.376 0.185-1.508-0.079-0.133-0.292-0.212-0.608-0.37z"/>
+        </svg>
+    </a>
+
+    <footer>
+        <p>&copy; 2026 DivarPanel Studio ve Dizayn. Bütün hüquqlar qorunur.</p>
+        <p class="signature">By Behram</p>
+    </footer>
+
+    <script>
+        function orderOnWhatsApp(modelName) {
+            const phoneNumber = "994702283682";
+            const message = encodeURIComponent("Salam, " + modelName + " modelindən sifariş etmək istəyirəm.");
+            window.open("https://wa.me/" + phoneNumber + "?text=" + message, "_blank");
+        }
+
+        const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
+
+        fetch(webappUrl)
+            .then(response => response.json())
+            .then(rows => {
+                const productRows = rows.slice(1); // İlk başlığı atlayırıq
+                
+                let uniqueSections = {
+                    "green": { name: "Yaşıllıq Modelləri", items: [] },
+                    "cita": { name: "Dekorativ Çita Modelləri", items: [] },
+                    "laminat": { name: "Laminat Modelləri", items: [] },
+                    "qaya": { name: "Qaya Panelləri", items: [] },
+                    "guzgu": { name: "Güzgü Modelləri", items: [] },
+                    "bambuk": { name: "Bambuk Panellər", items: [] }
+                };
+
+                productRows.forEach(row => {
+                    if (row.length >= 5) {
+                        let cat = String(row[0] || "").trim().toLowerCase();
+                        let title = String(row[1] || "").trim();
+                        let price = String(row[2] || "").trim();
+                        let size = String(row[3] || "").trim();
+                        let image = String(row[4] || "").trim();
+                        let code = String(row[5] || "").trim();
+
+                        let key = "";
+                        if (cat.includes("зелень") || cat.includes("ot") || cat.includes("yaşıl")) key = "green";
+                        else if (cat.includes("рейка") || cat.includes("çita") || cat.includes("cita")) key = "cita";
+                        else if (cat.includes("ламинат") || cat.includes("laminat")) key = "laminat";
+                        else if (cat.includes("скала") || cat.includes("qaya") || cat.includes("daş")) key = "qaya";
+                        else if (cat.includes("зеркало") || cat.includes("güzgü")) key = "guzgu";
+                        else if (cat.includes("бамбук") || cat.includes("bambuk")) key = "bambuk";
+
+                        if (key && uniqueSections[key] && image) {
+                            uniqueSections[key].items.push({
+                                title: title,
+                                price: price,
+                                size: size,
+                                image: image,
+                                code: code
+                            });
+                        }
+                    }
+                });
+
+                let container = document.getElementById('catalog-container');
+                container.innerHTML = "";
+
+                for (let key in uniqueSections) {
+                    let sec = uniqueSections[key];
+                    if (sec.items.length > 0) {
+                        let sectionHtml = `<h2 id="${key}" class="section-title">${sec.name}</h2><div class="grid">`;
+                        sec.items.forEach(item => {
+                            sectionHtml += `
+                                <div class="card">
+                                    <div class="card-img-container" onclick="orderOnWhatsApp('${item.title} (${item.code})')">
+                                        <img src="${item.image}" alt="${item.title}">
+                                        ${item.code ? `<div class="card-badge">${item.code}</div>` : ''}
+                                        ${item.price ? `<div class="price-badge">${item.price}</div>` : ''}
+                                        <div class="order-overlay">Sifariş etmək üçün klikləyin 💬</div>
+                                    </div>
+                                    <div class="card-content">
+                                        <h3 class="card-title">${item.title}</h3>
+                                        ${item.size ? `<div class="info-group"><div class="info-label">Ölçü</div><div class="info-value">${item.size}</div></div>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        sectionHtml += `</div>`;
+                        container.innerHTML += sectionHtml;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById('catalog-container').innerHTML = '<p style="text-align: center; color: red;">Məlumatları yükləmək mümkün olmadı.</p>';
+            });
+    </script>
+</body>
+</html>
