@@ -224,7 +224,7 @@
         fetch(webappUrl)
             .then(response => response.json())
             .then(rows => {
-                const productRows = rows.slice(1); // İlk başlığı atlayırıq
+                const productRows = rows.slice(1);
                 
                 let uniqueSections = {
                     "green": { name: "Yaşıllıq Modelləri", items: [] },
@@ -236,31 +236,64 @@
                 };
 
                 productRows.forEach(row => {
-                    if (row.length >= 5) {
-                        let cat = String(row[0] || "").trim().toLowerCase();
-                        let title = String(row[1] || "").trim();
-                        let price = String(row[2] || "").trim();
-                        let size = String(row[3] || "").trim();
-                        let image = String(row[4] || "").trim();
-                        let code = String(row[5] || "").trim();
+                    let cat = "";
+                    let title = "";
+                    let price = "";
+                    let size = "";
+                    let image = "";
+                    let code = "";
 
-                        let key = "";
-                        if (cat.includes("зелень") || cat.includes("ot") || cat.includes("yaşıl")) key = "green";
-                        else if (cat.includes("рейка") || cat.includes("çita") || cat.includes("cita")) key = "cita";
-                        else if (cat.includes("ламинат") || cat.includes("laminat")) key = "laminat";
-                        else if (cat.includes("скала") || cat.includes("qaya") || cat.includes("daş")) key = "qaya";
-                        else if (cat.includes("зеркало") || cat.includes("güzgü")) key = "guzgu";
-                        else if (cat.includes("бамбук") || cat.includes("bambuk")) key = "bambuk";
+                    // Hər bir xananı yoxlayıb nə olduğunu özümüz təyin edirik
+                    row.forEach(cell => {
+                        let val = String(cell || "").trim();
+                        let lower = val.toLowerCase();
 
-                        if (key && uniqueSections[key] && image) {
-                            uniqueSections[key].items.push({
-                                title: title,
-                                price: price,
-                                size: size,
-                                image: image,
-                                code: code
-                            });
+                        if (val.startsWith("http")) {
+                            image = val;
+                        } else if (lower.includes("azn") || (!isNaN(val) && val !== "" && Number(val) > 0 && val.length < 6 && !price && !lower.includes("sm"))) {
+                            price = val;
+                        } else if (lower.includes("sm") || lower.includes("x") || lower.includes("sm.")) {
+                            size = val;
+                        } else if (lower.includes("kod") || (!isNaN(val) && val.length <= 6 && val.length > 0)) {
+                            code = val;
+                        } else if (val.length > 3 && !title && !val.startsWith("http")) {
+                            title = val;
                         }
+
+                        // Kateqoriya tapan açarlar
+                        if (lower.includes("зелень") || lower.includes("ot") || lower.includes("yaşıl")) cat = "green";
+                        else if (lower.includes("рейка") || lower.includes("çita") || lower.includes("cita")) cat = "cita";
+                        else if (lower.includes("ламинат") || lower.includes("laminat")) cat = "laminat";
+                        else if (lower.includes("скала") || lower.includes("qaya") || lower.includes("daş")) cat = "qaya";
+                        else if (lower.includes("зеркало") || lower.includes("güzgü")) cat = "guzgu";
+                        else if (lower.includes("бамбук") || lower.includes("bambuk")) cat = "bambuk";
+                    });
+
+                    // Əgər avtomatik tapılmadısa, birbaşa standart sütun yerlərinə baxırıq
+                    if (!cat && row[0]) {
+                        let c0 = String(row[0]).toLowerCase();
+                        if (c0.includes("зелень") || c0.includes("ot") || c0.includes("yaşıl")) cat = "green";
+                        else if (c0.includes("рейка") || c0.includes("çita") || c0.includes("cita")) cat = "cita";
+                        else if (c0.includes("ламинат") || c0.includes("laminat")) cat = "laminat";
+                        else if (c0.includes("скала") || c0.includes("qaya") || c0.includes("daş")) cat = "qaya";
+                        else if (c0.includes("зеркало") || c0.includes("guzgü")) cat = "guzgu";
+                        else if (c0.includes("бамбук") || c0.includes("bambuk")) cat = "bambuk";
+                    }
+
+                    if (!image) {
+                        // Sətirdə http ilə başlayan başqa xana var mı axtarırıq
+                        let foundImg = row.find(c => String(c).trim().startsWith("http"));
+                        if (foundImg) image = String(foundImg).trim();
+                    }
+
+                    if (cat && uniqueSections[cat] && image) {
+                        uniqueSections[cat].items.push({
+                            title: title || row[1] || "Dekorativ Məhsul",
+                            price: price || row[2] || "",
+                            size: size || row[3] || "",
+                            image: image,
+                            code: code || row[5] || ""
+                        });
                     }
                 });
 
@@ -275,7 +308,7 @@
                             sectionHtml += `
                                 <div class="card">
                                     <div class="card-img-container" onclick="orderOnWhatsApp('${item.title} (${item.code})')">
-                                        <img src="${item.image}" alt="${item.title}">
+                                        <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300?text=Sekil+Tapilmadi'">
                                         ${item.code ? `<div class="card-badge">${item.code}</div>` : ''}
                                         ${item.price ? `<div class="price-badge">${item.price}</div>` : ''}
                                         <div class="order-overlay">Sifariş etmək üçün klikləyin 💬</div>
