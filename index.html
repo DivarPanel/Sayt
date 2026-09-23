@@ -15,11 +15,7 @@
             --border-color: #2d333b;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -44,6 +40,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
             gap: 5px;
         }
 
@@ -61,6 +58,22 @@
             color: var(--accent-color);
             background: rgba(212, 175, 55, 0.1);
         }
+
+        /* Səbət Düyməsi */
+        .cart-nav-btn {
+            background-color: var(--accent-color) !important;
+            color: #0f1115 !important;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            font-weight: 700 !important;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s;
+        }
+        .cart-nav-btn:hover { transform: scale(1.05); }
 
         header {
             text-align: center;
@@ -131,7 +144,6 @@
             overflow: hidden;
             position: relative;
             background-color: #141820;
-            cursor: pointer;
         }
 
         .card-img-container.large-img-container {
@@ -153,27 +165,6 @@
 
         .card:hover .card-img-container img {
             transform: scale(1.04);
-        }
-
-        .order-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(15, 17, 21, 0.9);
-            color: var(--accent-color);
-            text-align: center;
-            padding: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transform: translateY(100%);
-            transition: transform 0.25s ease;
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
-            z-index: 2;
-        }
-
-        .card-img-container:hover .order-overlay {
-            transform: translateY(0);
         }
 
         .card-badge {
@@ -210,32 +201,166 @@
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+            justify-content: space-between;
         }
 
         .card-title {
             font-family: 'Playfair Display', serif;
             font-size: 1.2rem;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: var(--text-main);
         }
 
-        .info-group {
-            margin-bottom: 10px;
+        .info-group { margin-bottom: 8px; }
+        .info-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-color); font-weight: 600; margin-bottom: 2px; }
+        .info-value { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* Say seçici və Səbətə at düyməsi */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            align-items: center;
         }
 
-        .info-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--accent-color);
+        .quantity-input {
+            width: 70px;
+            background: #0f1115;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
             font-weight: 600;
-            margin-bottom: 2px;
         }
 
-        .info-value {
+        .add-to-cart-btn {
+            flex-grow: 1;
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--accent-color);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            padding: 9px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
             font-size: 0.9rem;
-            color: var(--text-muted);
         }
+
+        .add-to-cart-btn:hover {
+            background-color: var(--accent-color);
+            color: #0f1115;
+        }
+
+        /* Səbət Modalı */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 550px;
+            border-radius: 16px;
+            padding: 25px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .close-modal:hover { color: white; }
+
+        .cart-items-list {
+            overflow-y: auto;
+            max-height: 40vh;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f1115;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .cart-item-info { display: flex; flex-direction: column; }
+        .cart-item-title { font-weight: 600; color: var(--text-main); }
+        .cart-item-details { font-size: 0.8rem; color: var(--text-muted); }
+
+        .remove-item {
+            color: #ff4d4d;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .cart-total {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .checkout-whatsapp-btn {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .checkout-whatsapp-btn:hover { background-color: #20ba5a; }
 
         /* Tərpənməz WhatsApp düyməsi */
         .fixed-whatsapp {
@@ -252,19 +377,9 @@
             justify-content: center;
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
             z-index: 9999;
-            transition: transform 0.2s ease;
             text-decoration: none;
         }
-
-        .fixed-whatsapp:hover {
-            transform: scale(1.08);
-        }
-
-        .fixed-whatsapp svg {
-            width: 32px;
-            height: 32px;
-            fill: white;
-        }
+        .fixed-whatsapp svg { width: 32px; height: 32px; fill: white; }
 
         footer {
             text-align: center;
@@ -275,12 +390,7 @@
             font-size: 0.85rem;
             margin-top: auto;
         }
-
-        footer .signature {
-            color: var(--accent-color);
-            font-weight: 600;
-            margin-top: 4px;
-        }
+        footer .signature { color: var(--accent-color); font-weight: 600; margin-top: 4px; }
 
         @media (max-width: 768px) {
             header h1 { font-size: 2rem; }
@@ -303,6 +413,26 @@
         <p style="text-align: center; color: var(--text-muted);">Kataloq yüklənir...</p>
     </div>
 
+    <!-- Səbət Modalı -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Səbətiniz</h2>
+                <button class="close-modal" onclick="toggleCartModal()">&times;</button>
+            </div>
+            <div class="cart-items-list" id="cartItemsList">
+                <p style="text-align: center; color: var(--text-muted);">Səbətiniz boşdur.</p>
+            </div>
+            <div class="cart-total">
+                <span>Ümumi Məbləğ:</span>
+                <span id="cartTotalPrice">0 AZN</span>
+            </div>
+            <button class="checkout-whatsapp-btn" onclick="checkoutWhatsApp()">
+                💬 Səbəti WhatsApp ilə Təsdiqlə
+            </button>
+        </div>
+    </div>
+
     <a href="https://wa.me/994702283682?text=Salam,%20suallarım%20var." class="fixed-whatsapp" target="_blank" title="WhatsApp ilə əlaqə">
         <svg viewBox="0 0 32 32">
             <path d="M16.002 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.135 8.048l-2.135 7.799 8.006-2.102c2.348 1.281 5.013 1.957 7.724 1.957 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16.002 29.333c-2.42 0-4.786-0.651-6.852-1.884l-0.491-0.292-5.094 1.338 1.359-4.966-0.319-0.507c-1.341-2.128-2.049-4.595-2.049-7.121 0-7.353 5.981-13.333 13.333-13.333s13.333 5.981 13.333 13.333c0 7.353-5.981 13.333-13.333 13.333zM21.905 19.467c-0.317-0.158-1.874-0.925-2.165-1.031-0.292-0.106-0.503-0.158-0.715 0.158s-0.82 1.031-1.005 1.243c-0.185 0.212-0.371 0.239-0.688 0.081-0.317-0.158-1.34-0.494-2.553-1.574-0.943-0.84-1.579-1.876-1.765-2.193-0.185-0.317-0.02-0.489 0.139-0.647 0.143-0.142 0.317-0.371 0.475-0.556 0.158-0.185 0.211-0.317 0.317-0.529 0.106-0.212 0.053-0.397-0.026-0.556s-0.715-1.724-0.98-2.362c-0.259-0.619-0.523-0.535-0.715-0.545-0.185-0.01-0.397-0.012-0.608-0.012s-0.556 0.079-0.847 0.397c-0.292 0.317-1.112 1.086-1.112 2.647s1.139 3.071 1.297 3.284c0.158 0.212 2.241 3.42 5.428 4.796 0.758 0.327 1.349 0.523 1.809 0.671 0.761 0.242 1.454 0.208 2.001 0.126 0.61-0.092 1.874-0.767 2.138-1.508 0.264-0.741 0.264-1.376 0.185-1.508-0.079-0.133-0.292-0.212-0.608-0.37z"/>
@@ -315,40 +445,20 @@
     </footer>
 
     <script>
-        function orderOnWhatsApp(modelName) {
-            const phoneNumber = "994702283682";
-            const message = encodeURIComponent("Salam, " + modelName + " modelindən sifariş etmək istəyirəm.");
-            window.open("https://wa.me/" + phoneNumber + "?text=" + message, "_blank");
-        }
-
         const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
+        let cart = [];
 
         let sectionNames = {
-            "green": "Yaşıllıq Modelləri",
-            "cita": "Dekorativ Çita",
-            "laminat": "Laminat Modelləri",
-            "qaya": "Qaya Panelləri",
-            "guzgu": "Güzgü Modelləri",
-            "bambuk": "Bambuk Panellər",
-            "mdf_daraq": "MDF Daraq",
-            "akustik_daraq": "Akustik Daraq",
-            "akustik_paneller": "Akustik Panellər",
-            "kamin": "Kamin Yanı Şöminə",
-            "pvc_daraq": "PVC Daraqlar",
-            "yapisdiricilar": "Yapışdırıcılar",
-            "aksesuarlar": "Aksesuarlar",
-            "mermer": "Mərmər Panellər",
-            "ozu_yapisan": "Özü Yapışan Panellər",
-            "motiv": "Motiv Modelləri"
+            "green": "Yaşıllıq Modelləri", "cita": "Dekorativ Çita", "laminat": "Laminat Modelləri",
+            "qaya": "Qaya Panelləri", "guzgu": "Güzgü Modelləri", "bambuk": "Bambuk Panellər",
+            "mdf_daraq": "MDF Daraq", "akustik_daraq": "Akustik Daraq", "akustik_paneller": "Akustik Panellər",
+            "kamin": "Kamin Yanı Şöminə", "pvc_daraq": "PVC Daraqlar", "yapisdiricilar": "Yapışdırıcılar",
+            "aksesuarlar": "Aksesuarlar", "mermer": "Mərmər Panellər", "ozu_yapisan": "Özü Yapışan Panellər", "motiv": "Motiv Modelləri"
         };
 
-        // Səhifə açılan kimi keşdən oxumaq (əgər əvvəl yüklənibsə ani açılır)
         let cachedData = localStorage.getItem("catalog_data");
-        if (cachedData) {
-            processCatalog(JSON.parse(cachedData));
-        }
+        if (cachedData) processCatalog(JSON.parse(cachedData));
 
-        // Arxa fonda məlumatı yeniləyirik
         fetch(webappUrl)
             .then(response => response.json())
             .then(rows => {
@@ -357,14 +467,13 @@
             })
             .catch(error => {
                 console.error(error);
-                if (!cachedData) {
-                    document.getElementById('catalog-container').innerHTML = '<p style="text-align: center; color: red;">Məlumatları yükləmək mümkün olmadı.</p>';
-                }
+                if (!cachedData) document.getElementById('catalog-container').innerHTML = '<p style="text-align: center; color: red;">Məlumatları yükləmək mümkün olmadı.</p>';
             });
 
         function processCatalog(rows) {
             const productRows = rows.slice(1);
             let activeSectionsData = {};
+            let globalIndex = 0;
 
             productRows.forEach(row => {
                 if (row.length >= 6) {
@@ -396,12 +505,9 @@
 
                     if (key && image) {
                         if (!activeSectionsData[key]) {
-                            activeSectionsData[key] = {
-                                name: sectionNames[key],
-                                items: []
-                            };
+                            activeSectionsData[key] = { name: sectionNames[key], items: [] };
                         }
-                        activeSectionsData[key].items.push({ title, price, size, image, code, desc });
+                        activeSectionsData[key].items.push({ id: globalIndex++, title, price, size, image, code, desc });
                     }
                 }
             });
@@ -409,7 +515,7 @@
             let navMenu = document.getElementById('nav-menu');
             let container = document.getElementById('catalog-container');
             
-            navMenu.innerHTML = `<a href="#home">Ana Səhifə</a>`;
+            navMenu.innerHTML = `<a href="#home">Ana Səhifə</a><button class="cart-nav-btn" onclick="toggleCartModal()">🛒 Səbət (<span id="cart-count">0</span>)</button>`;
             container.innerHTML = "";
 
             for (let key in activeSectionsData) {
@@ -423,16 +529,21 @@
                     sec.items.forEach(item => {
                         sectionHtml += `
                             <div class="card">
-                                <div class="card-img-container ${isBambuk ? 'large-img-container' : ''}" onclick="orderOnWhatsApp('${item.title} (${item.code})')">
+                                <div class="card-img-container ${isBambuk ? 'large-img-container' : ''}">
                                     <img src="${item.image}" alt="${item.title}" loading="lazy">
                                     ${item.code ? `<div class="card-badge">Kod: ${item.code}</div>` : ''}
                                     ${item.price ? `<div class="price-badge">${item.price}</div>` : ''}
-                                    <div class="order-overlay">Sifariş etmək üçün klikləyin 💬</div>
                                 </div>
                                 <div class="card-content">
-                                    <h3 class="card-title">${item.title}</h3>
-                                    ${item.size ? `<div class="info-group"><div class="info-label">Ölçü</div><div class="info-value">${item.size}</div></div>` : ''}
-                                    ${item.desc ? `<div class="info-group"><div class="info-label">Açıqlama</div><div class="info-value">${item.desc}</div></div>` : ''}
+                                    <div>
+                                        <h3 class="card-title">${item.title}</h3>
+                                        ${item.size ? `<div class="info-group"><div class="info-label">Ölçü</div><div class="info-value">${item.size}</div></div>` : ''}
+                                        ${item.desc ? `<div class="info-group"><div class="info-label">Açıqlama</div><div class="info-value">${item.desc}</div></div>` : ''}
+                                    </div>
+                                    <div class="card-actions">
+                                        <input type="number" id="qty_${item.id}" class="quantity-input" value="1" min="1">
+                                        <button class="add-to-cart-btn" onclick="addToCart('${item.title.replace(/'/g, "\\'")}', '${item.code}', '${item.price}', ${item.id})">Səbətə at</button>
+                                    </div>
                                 </div>
                             </div>
                         `;
@@ -441,10 +552,94 @@
                     container.innerHTML += sectionHtml;
                 }
             }
+        }
 
-            if (Object.keys(activeSectionsData).length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Hələ heç bir məhsul əlavə olunmayıb.</p>';
+        function toggleCartModal() {
+            let modal = document.getElementById('cartModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function addToCart(title, code, price, id) {
+            let qtyInput = document.getElementById(`qty_${id}`);
+            let quantity = parseInt(qtyInput.value) || 1;
+
+            let existingItem = cart.find(i => i.title === title && i.code === code);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ title, code, price, quantity });
             }
+
+            updateCartUI();
+            alert(`"${title}" (${quantity} ədəd) səbətə əlavə olundu.`);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            let cartCount = document.getElementById('cart-count');
+            let cartItemsList = document.getElementById('cartItemsList');
+            let cartTotalPrice = document.getElementById('cartTotalPrice');
+
+            let totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.innerText = totalCount;
+
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Səbətiniz boşdur.</p>';
+                cartTotalPrice.innerText = '0 AZN';
+                return;
+            }
+
+            let listHtml = '';
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                let numericPrice = parseFloat(item.price) || 0;
+                let itemTotal = numericPrice * item.quantity;
+                grandTotal += itemTotal;
+
+                listHtml += `
+                    <div class="cart-item-row">
+                        <div class="cart-item-info">
+                            <span class="cart-item-title">${item.title} ${item.code ? '(' + item.code + ')' : ''}</span>
+                            <span class="cart-item-details">Say: ${item.quantity} ədəd | Qiymət: ${item.price || 'Razılaşma ilə'}</span>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${index})">Sil</button>
+                    </div>
+                `;
+            });
+
+            cartItemsList.innerHTML = listHtml;
+            cartTotalPrice.innerText = grandTotal > 0 ? grandTotal + ' AZN' : 'Razılaşma ilə';
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) {
+                alert("Səbətiniz boşdur!");
+                return;
+            }
+
+            let phoneNumber = "994702283682";
+            let message = "Salam, aşağıdakı məhsulları sifariş etmək istəyirəm:\n\n";
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                let numericPrice = parseFloat(item.price) || 0;
+                let itemTotal = numericPrice * item.quantity;
+                grandTotal += itemTotal;
+
+                message += `${index + 1}. *${item.title}* ${item.code ? '[Kod: ' + item.code + ']' : ''}\n`;
+                message += `   - Say: ${item.quantity} ədəd\n`;
+                message += `   - Qiymət: ${item.price ? item.price : 'Razılaşma ilə'}\n\n`;
+            });
+
+            message += `*Ümumi Məbləğ:* ${grandTotal > 0 ? grandTotal + ' AZN' : 'Razılaşma ilə'}`;
+
+            let encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
         }
     </script>
 </body>
