@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DivarPanel Studio ve Dizayn | Rəsmi Kataloq</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --card-bg: #181c24;
+            --accent-color: #d4af37;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #2d333b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Naviqasiya Menyu */
+        nav {
+            background-color: #141820;
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 4px 10px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+            border-radius: 4px;
+        }
+
+        nav a.active, nav a:hover {
+            color: var(--accent-color);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 25px;
+            background: linear-gradient(to bottom, #141820, var(--bg-color));
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .card-img-container {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+            background-color: #141820;
+            cursor: pointer;
+        }
+
+        .card-img-container.large-img-container {
+            height: 320px;
+            background-color: #0b0d10;
+        }
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .card-img-container.large-img-container img {
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        .card:hover .card-img-container img {
+            transform: scale(1.04);
+        }
+
+        .order-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 17, 21, 0.9);
+            color: var(--accent-color);
+            text-align: center;
+            padding: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transform: translateY(100%);
+            transition: transform 0.25s ease;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            z-index: 2;
+        }
+
+        .card-img-container:hover .order-overlay {
+            transform: translateY(0);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: rgba(15, 17, 21, 0.85);
+            color: var(--accent-color);
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 2;
+        }
+
+        .price-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: var(--accent-color);
+            color: #0f1115;
+            padding: 5px 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 15px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .info-group {
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Tərpənməz WhatsApp düyməsi */
+        .fixed-whatsapp {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25d366;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 9999;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .fixed-whatsapp:hover {
+            transform: scale(1.08);
+        }
+
+        .fixed-whatsapp svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background-color: #0b0d10;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        footer .signature {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="nav-menu">
+        <a href="#home">Ana Səhifə</a>
+    </nav>
+
+    <header id="home">
+        <h1>DivarPanel Studio ve Dizayn</h1>
+        <p>İnteryeriniz üçün eksklüziv dekorativ panellər, yaşıllıq, çita, akustik və digər dizayn modelləri.</p>
+    </header>
+
+    <div class="container" id="catalog-container">
+        <p style="text-align: center; color: var(--text-muted);">Kataloq yüklənir...</p>
+    </div>
+
+    <a href="https://wa.me/994702283682?text=Salam,%20suallarım%20var." class="fixed-whatsapp" target="_blank" title="WhatsApp ilə əlaqə">
+        <svg viewBox="0 0 32 32">
+            <path d="M16.002 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.135 8.048l-2.135 7.799 8.006-2.102c2.348 1.281 5.013 1.957 7.724 1.957 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16.002 29.333c-2.42 0-4.786-0.651-6.852-1.884l-0.491-0.292-5.094 1.338 1.359-4.966-0.319-0.507c-1.341-2.128-2.049-4.595-2.049-7.121 0-7.353 5.981-13.333 13.333-13.333s13.333 5.981 13.333 13.333c0 7.353-5.981 13.333-13.333 13.333zM21.905 19.467c-0.317-0.158-1.874-0.925-2.165-1.031-0.292-0.106-0.503-0.158-0.715 0.158s-0.82 1.031-1.005 1.243c-0.185 0.212-0.371 0.239-0.688 0.081-0.317-0.158-1.34-0.494-2.553-1.574-0.943-0.84-1.579-1.876-1.765-2.193-0.185-0.317-0.02-0.489 0.139-0.647 0.143-0.142 0.317-0.371 0.475-0.556 0.158-0.185 0.211-0.317 0.317-0.529 0.106-0.212 0.053-0.397-0.026-0.556s-0.715-1.724-0.98-2.362c-0.259-0.619-0.523-0.535-0.715-0.545-0.185-0.01-0.397-0.012-0.608-0.012s-0.556 0.079-0.847 0.397c-0.292 0.317-1.112 1.086-1.112 2.647s1.139 3.071 1.297 3.284c0.158 0.212 2.241 3.42 5.428 4.796 0.758 0.327 1.349 0.523 1.809 0.671 0.761 0.242 1.454 0.208 2.001 0.126 0.61-0.092 1.874-0.767 2.138-1.508 0.264-0.741 0.264-1.376 0.185-1.508-0.079-0.133-0.292-0.212-0.608-0.37z"/>
+        </svg>
+    </a>
+
+    <footer>
+        <p>&copy; 2026 DivarPanel Studio ve Dizayn. Bütün hüquqlar qorunur.</p>
+        <p class="signature">By Behram</p>
+    </footer>
+
+    <script>
+        function orderOnWhatsApp(modelName) {
+            const phoneNumber = "994702283682";
+            const message = encodeURIComponent("Salam, " + modelName + " modelindən sifariş etmək istəyirəm.");
+            window.open("https://wa.me/" + phoneNumber + "?text=" + message, "_blank");
+        }
+
+        const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
+
+        let sectionNames = {
+            "green": "Yaşıllıq Modelləri",
+            "cita": "Dekorativ Çita",
+            "laminat": "Laminat Modelləri",
+            "qaya": "Qaya Panelləri",
+            "guzgu": "Güzgü Modelləri",
+            "bambuk": "Bambuk Panellər",
+            "mdf_daraq": "MDF Daraq",
+            "akustik_daraq": "Akustik Daraq",
+            "akustik_paneller": "Akustik Panellər",
+            "kamin": "Kamin Yanı Şöminə",
+            "pvc_daraq": "PVC Daraqlar",
+            "yapisdiricilar": "Yapışdırıcılar",
+            "aksesuarlar": "Aksesuarlar",
+            "mermer": "Mərmər Panellər",
+            "ozu_yapisan": "Özü Yapışan Panellər",
+            "motiv": "Motiv Modelləri"
+        };
+
+        // Səhifə açılan kimi keşdən oxumaq (əgər əvvəl yüklənibsə ani açılır)
+        let cachedData = localStorage.getItem("catalog_data");
+        if (cachedData) {
+            processCatalog(JSON.parse(cachedData));
+        }
+
+        // Arxa fonda məlumatı yeniləyirik
+        fetch(webappUrl)
+            .then(response => response.json())
+            .then(rows => {
+                localStorage.setItem("catalog_data", JSON.stringify(rows));
+                processCatalog(rows);
+            })
+            .catch(error => {
+                console.error(error);
+                if (!cachedData) {
+                    document.getElementById('catalog-container').innerHTML = '<p style="text-align: center; color: red;">Məlumatları yükləmək mümkün olmadı.</p>';
+                }
+            });
+
+        function processCatalog(rows) {
+            const productRows = rows.slice(1);
+            let activeSectionsData = {};
+
+            productRows.forEach(row => {
+                if (row.length >= 6) {
+                    let catText = String(row[0] || "").trim().toLowerCase();
+                    let title   = String(row[1] || "").trim();
+                    let price   = String(row[2] || "").trim();
+                    let size    = String(row[3] || "").trim();
+                    let image   = String(row[4] || "").trim();
+                    let code    = String(row[5] || "").trim();
+                    let desc    = String(row[6] || "").trim();
+
+                    let key = "";
+                    if (catText.includes("green") || catText.includes("yaşıl") || catText.includes("зелень") || catText.includes("ot")) key = "green";
+                    else if (catText.includes("cita") || catText.includes("çita") || catText.includes("рейка")) key = "cita";
+                    else if (catText.includes("laminat") || catText.includes("ламинат")) key = "laminat";
+                    else if (catText.includes("qaya") || catText.includes("daş") || catText.includes("скала")) key = "qaya";
+                    else if (catText.includes("guzgu") || catText.includes("зеркало")) key = "guzgu";
+                    else if (catText.includes("bambuk") || catText.includes("бамбук")) key = "bambuk";
+                    else if (catText.includes("mdf daraq") || catText.includes("mdf")) key = "mdf_daraq";
+                    else if (catText.includes("akustik daraq")) key = "akustik_daraq";
+                    else if (catText.includes("akustik panel") || catText.includes("akustik")) key = "akustik_paneller";
+                    else if (catText.includes("kamin") || catText.includes("somine") || catText.includes("şöminə")) key = "kamin";
+                    else if (catText.includes("pvc daraq")) key = "pvc_daraq";
+                    else if (catText.includes("yapisdirici") || catText.includes("yapışqan")) key = "yapisdiricilar";
+                    else if (catText.includes("aksesuar")) key = "aksesuarlar";
+                    else if (catText.includes("mermer") || catText.includes("mərmər")) key = "mermer";
+                    else if (catText.includes("ozu yapisan") || catText.includes("özü yapışan")) key = "ozu_yapisan";
+                    else if (catText.includes("motiv")) key = "motiv";
+
+                    if (key && image) {
+                        if (!activeSectionsData[key]) {
+                            activeSectionsData[key] = {
+                                name: sectionNames[key],
+                                items: []
+                            };
+                        }
+                        activeSectionsData[key].items.push({ title, price, size, image, code, desc });
+                    }
+                }
+            });
+
+            let navMenu = document.getElementById('nav-menu');
+            let container = document.getElementById('catalog-container');
+            
+            navMenu.innerHTML = `<a href="#home">Ana Səhifə</a>`;
+            container.innerHTML = "";
+
+            for (let key in activeSectionsData) {
+                let sec = activeSectionsData[key];
+                if (sec.items.length > 0) {
+                    navMenu.innerHTML += `<a href="#${key}">${sec.name}</a>`;
+
+                    let isBambuk = (key === "bambuk");
+                    let sectionHtml = `<h2 id="${key}" class="section-title">${sec.name}</h2><div class="grid">`;
+                    
+                    sec.items.forEach(item => {
+                        sectionHtml += `
+                            <div class="card">
+                                <div class="card-img-container ${isBambuk ? 'large-img-container' : ''}" onclick="orderOnWhatsApp('${item.title} (${item.code})')">
+                                    <img src="${item.image}" alt="${item.title}" loading="lazy">
+                                    ${item.code ? `<div class="card-badge">Kod: ${item.code}</div>` : ''}
+                                    ${item.price ? `<div class="price-badge">${item.price}</div>` : ''}
+                                    <div class="order-overlay">Sifariş etmək üçün klikləyin 💬</div>
+                                </div>
+                                <div class="card-content">
+                                    <h3 class="card-title">${item.title}</h3>
+                                    ${item.size ? `<div class="info-group"><div class="info-label">Ölçü</div><div class="info-value">${item.size}</div></div>` : ''}
+                                    ${item.desc ? `<div class="info-group"><div class="info-label">Açıqlama</div><div class="info-value">${item.desc}</div></div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    sectionHtml += `</div>`;
+                    container.innerHTML += sectionHtml;
+                }
+            }
+
+            if (Object.keys(activeSectionsData).length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Hələ heç bir məhsul əlavə olunmayıb.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
