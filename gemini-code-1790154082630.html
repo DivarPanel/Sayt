@@ -41,19 +41,25 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
         }
 
         nav a {
             color: var(--text-muted);
             text-decoration: none;
-            margin: 0 8px;
+            padding: 4px 10px;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: color 0.3s ease;
+            border-radius: 4px;
         }
 
         nav a.active, nav a:hover {
             color: var(--accent-color);
+            background: rgba(212, 175, 55, 0.1);
         }
 
         header {
@@ -128,7 +134,6 @@
             cursor: pointer;
         }
 
-        /* Bambuk üçün xüsusi böyüdülmüş şəkil konteyneri */
         .card-img-container.large-img-container {
             height: 350px;
             background-color: #0b0d10;
@@ -148,11 +153,6 @@
 
         .card:hover .card-img-container img {
             transform: scale(1.05);
-        }
-
-        .card-img-container.double-img {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
         }
 
         .order-overlay {
@@ -301,20 +301,14 @@
 </head>
 <body>
 
-    <!-- Yuxarı Menyu -->
-    <nav>
+    <!-- Yuxarı Dinamik Menyu -->
+    <nav id="nav-menu">
         <a href="#home">Ana Səhifə</a>
-        <a href="#green">Yaşıllıq</a>
-        <a href="#cita">Çita</a>
-        <a href="#laminat">Laminatlar</a>
-        <a href="#qaya">Qaya</a>
-        <a href="#guzgu">Güzgü</a>
-        <a href="#bambuk">Bambuk</a>
     </nav>
 
     <header id="home">
         <h1>DivarPanel Studio ve Dizayn</h1>
-        <p>İnteryeriniz üçün eksklüziv dekorativ panellər, süni yaşıllıq, çita, laminat, qaya, güzgü və bambuk modelləri.</p>
+        <p>İnteryeriniz üçün eksklüziv dekorativ panellər, yaşıllıq, çita, akustik və digər dizayn modelləri.</p>
     </header>
 
     <div class="container" id="catalog-container">
@@ -347,14 +341,47 @@
             .then(rows => {
                 const productRows = rows.slice(1);
                 
+                // Bütün qruplar siyahısı
                 let uniqueSections = {
                     "green": { name: "Yaşıllıq Modelləri", items: [] },
                     "cita": { name: "Dekorativ Çita Modelləri", items: [] },
                     "laminat": { name: "Laminat Modelləri", items: [] },
                     "qaya": { name: "Qaya Panelləri", items: [] },
                     "guzgu": { name: "Güzgü Modelləri", items: [] },
-                    "bambuk": { name: "Bambuk Panellər", items: [] }
+                    "bambuk": { name: "Bambuk Panellər", items: [] },
+                    "mdf_daraq": { name: "MDF Daraq", items: [] },
+                    "akustik_daraq": { name: "AKUSTIK Daraq", items: [] },
+                    "akustik_paneller": { name: "AKUSTIK Panellər", items: [] },
+                    "kamin": { name: "Kamin Yanı Şöminə", items: [] },
+                    "pvc_daraq": { name: "PVC Daraqlar", items: [] },
+                    "yapisdiricilar": { name:ıştırıcılar items: [] }, // fallback kimi düzəldilib aşağıda
+                    "aksesuarlar": { name: "Aksesuarlar", items: [] },
+                    "mermer": { name: "Mərmər Panellər", items: [] },
+                    "ozu_yapisan": { name: "Özü Yapışan Panellər", items: [] },
+                    "motiv": { name: "Motiv Modelləri", items: [] }
                 };
+
+                // Düzgün adlandırma obyekt üzrə
+                let sectionNames = {
+                    "green": "Yaşıllıq Modelləri",
+                    "cita": "Dekorativ Çita",
+                    "laminat": "Laminat Modelləri",
+                    "qaya": "Qaya Panelləri",
+                    "guzgu": "Güzgü Modelləri",
+                    "bambuk": "Bambuk Panellər",
+                    "mdf_daraq": "MDF Daraq",
+                    "akustik_daraq": "Akustik Daraq",
+                    "akustik_paneller": "Akustik Panellər",
+                    "kamin": "Kamin Yanı Şöminə",
+                    "pvc_daraq": "PVC Daraqlar",
+                    "yapisdiricilar": "Yapışdırıcılar",
+                    "aksesuarlar": "Aksesuarlar",
+                    "mermer": "Mərmər Panellər",
+                    "ozu_yapisan": "Özü Yapışan Panellər",
+                    "motiv": "Motiv Modelləri"
+                };
+
+                let activeSectionsData = {};
 
                 productRows.forEach(row => {
                     if (row.length >= 6) {
@@ -373,19 +400,42 @@
                         else if (catText.includes("qaya") || catText.includes("daş") || catText.includes("скала")) key = "qaya";
                         else if (catText.includes("guzgu") || catText.includes("зеркало")) key = "guzgu";
                         else if (catText.includes("bambuk") || catText.includes("бамбук")) key = "bambuk";
+                        else if (catText.includes("mdf daraq") || catText.includes("mdf")) key = "mdf_daraq";
+                        else if (catText.includes("akustik daraq")) key = "akustik_daraq";
+                        else if (catText.includes("akustik panel") || catText.includes("akustik")) key = "akustik_paneller";
+                        else if (catText.includes("kamin") || catText.includes("somine") || catText.includes("şöminə")) key = "kamin";
+                        else if (catText.includes("pvc daraq")) key = "pvc_daraq";
+                        else if (catText.includes("yapisdirici") || catText.includes("yapışqan")) key = "yapisdiricilar";
+                        else if (catText.includes("aksesuar")) key = "aksesuarlar";
+                        else if (catText.includes("mermer") || catText.includes("mərmər")) key = "mermer";
+                        else if (catText.includes("ozu yapisan") || catText.includes("özü yapışan")) key = "ozu_yapisan";
+                        else if (catText.includes("motiv")) key = "motiv";
 
-                        if (key && uniqueSections[key] && image) {
-                            uniqueSections[key].items.push({ title, price, size, image, code, desc });
+                        if (key && image) {
+                            if (!activeSectionsData[key]) {
+                                activeSectionsData[key] = {
+                                    name: sectionNames[key],
+                                    items: []
+                                };
+                            }
+                            activeSectionsData[key].items.push({ title, price, size, image, code, desc });
                         }
                     }
                 });
 
+                // Menyunu və kataloqu yalnız məhsulu olan qruplar üçün qururuq
+                let navMenu = document.getElementById('nav-menu');
                 let container = document.getElementById('catalog-container');
+                
+                navMenu.innerHTML = `<a href="#home">Ana Səhifə</a>`;
                 container.innerHTML = "";
 
-                for (let key in uniqueSections) {
-                    let sec = uniqueSections[key];
+                for (let key in activeSectionsData) {
+                    let sec = activeSectionsData[key];
                     if (sec.items.length > 0) {
+                        // Menyuya əlavə edirik
+                        navMenu.innerHTML += `<a href="#${key}">${sec.name}</a>`;
+
                         let isBambuk = (key === "bambuk");
                         let sectionHtml = `<h2 id="${key}" class="section-title">${sec.name}</h2><div class="grid">`;
                         
@@ -410,12 +460,15 @@
                         container.innerHTML += sectionHtml;
                     }
                 }
+
+                if (Object.keys(activeSectionsData).length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Hələ heç bir məhsul əlavə olunmayıb.</p>';
+                }
             })
             .catch(error => {
                 console.error(error);
                 document.getElementById('catalog-container').innerHTML = '<p style="text-align: center; color: red;">Məlumatları yükləmək mümkün olmadı.</p>';
             });
     </script>
-
 </body>
 </html>
