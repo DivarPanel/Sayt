@@ -26,6 +26,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            padding-bottom: 80px; /* Aşağıdakı sabit səbət düyməsi üçün məsafə */
         }
 
         /* Naviqasiya Menyu */
@@ -58,22 +59,6 @@
             color: var(--accent-color);
             background: rgba(212, 175, 55, 0.1);
         }
-
-        /* Səbət Düyməsi */
-        .cart-nav-btn {
-            background-color: var(--accent-color) !important;
-            color: #0f1115 !important;
-            padding: 6px 14px !important;
-            border-radius: 20px !important;
-            font-weight: 700 !important;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            border: none;
-            transition: transform 0.2s;
-        }
-        .cart-nav-btn:hover { transform: scale(1.05); }
 
         header {
             text-align: center;
@@ -218,7 +203,6 @@
         .info-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-color); font-weight: 600; margin-bottom: 2px; }
         .info-value { font-size: 0.9rem; color: var(--text-muted); }
 
-        /* Say seçici və Səbətə at düyməsi */
         .card-actions {
             display: flex;
             gap: 10px;
@@ -254,6 +238,53 @@
             background-color: var(--accent-color);
             color: #0f1115;
         }
+
+        /* Ekranın ən aşağı mərkəzində sabit duran Səbət Düyməsi */
+        .fixed-bottom-cart {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            color: #0f1115;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.4);
+            cursor: pointer;
+            z-index: 9998;
+            border: none;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .fixed-bottom-cart:hover {
+            transform: translateX(-50%) scale(1.05);
+            background-color: #e6c248;
+        }
+
+        /* Tərpənməz WhatsApp düyməsi (sağ aşağıda) */
+        .fixed-whatsapp {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 9999;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .fixed-whatsapp:hover { transform: scale(1.1); }
+        .fixed-whatsapp svg { width: 28px; height: 28px; fill: white; }
 
         /* Şəkil Böyütmə (Lightbox) Pəncərəsi */
         .lightbox-modal {
@@ -304,7 +335,7 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 10000;
+            z-index: 30000;
         }
 
         .modal {
@@ -405,25 +436,6 @@
         }
         .checkout-whatsapp-btn:hover { background-color: #20ba5a; }
 
-        /* Tərpənməz WhatsApp düyməsi */
-        .fixed-whatsapp {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: #25d366;
-            color: white;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-            z-index: 9999;
-            text-decoration: none;
-        }
-        .fixed-whatsapp svg { width: 32px; height: 32px; fill: white; }
-
         footer {
             text-align: center;
             padding: 30px;
@@ -438,6 +450,7 @@
         @media (max-width: 768px) {
             header h1 { font-size: 2rem; }
             .grid { grid-template-columns: 1fr; }
+            .fixed-bottom-cart { font-size: 0.9rem; padding: 10px 20px; }
         }
     </style>
 </head>
@@ -455,6 +468,11 @@
     <div class="container" id="catalog-container">
         <p style="text-align: center; color: var(--text-muted);">Kataloq yüklənir...</p>
     </div>
+
+    <!-- Həmişə əl altında olan Aşağı Mərkəz Səbət Düyməsi -->
+    <button class="fixed-bottom-cart" onclick="toggleCartModal()">
+        🛒 Səbətə Bax (<span id="cart-count">0</span>)
+    </button>
 
     <!-- Şəkil Böyütmə (Lightbox) Pəncərəsi -->
     <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
@@ -484,6 +502,7 @@
         </div>
     </div>
 
+    <!-- WhatsApp Əlaqə Düyməsi -->
     <a href="https://wa.me/994702283682?text=Salam,%20suallarım%20var." class="fixed-whatsapp" target="_blank" title="WhatsApp ilə əlaqə">
         <svg viewBox="0 0 32 32">
             <path d="M16.002 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.135 8.048l-2.135 7.799 8.006-2.102c2.348 1.281 5.013 1.957 7.724 1.957 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16.002 29.333c-2.42 0-4.786-0.651-6.852-1.884l-0.491-0.292-5.094 1.338 1.359-4.966-0.319-0.507c-1.341-2.128-2.049-4.595-2.049-7.121 0-7.353 5.981-13.333 13.333-13.333s13.333 5.981 13.333 13.333c0 7.353-5.981 13.333-13.333 13.333zM21.905 19.467c-0.317-0.158-1.874-0.925-2.165-1.031-0.292-0.106-0.503-0.158-0.715 0.158s-0.82 1.031-1.005 1.243c-0.185 0.212-0.371 0.239-0.688 0.081-0.317-0.158-1.34-0.494-2.553-1.574-0.943-0.84-1.579-1.876-1.765-2.193-0.185-0.317-0.02-0.489 0.139-0.647 0.143-0.142 0.317-0.371 0.475-0.556 0.158-0.185 0.211-0.317 0.317-0.529 0.106-0.212 0.053-0.397-0.026-0.556s-0.715-1.724-0.98-2.362c-0.259-0.619-0.523-0.535-0.715-0.545-0.185-0.01-0.397-0.012-0.608-0.012s-0.556 0.079-0.847 0.397c-0.292 0.317-1.112 1.086-1.112 2.647s1.139 3.071 1.297 3.284c0.158 0.212 2.241 3.42 5.428 4.796 0.758 0.327 1.349 0.523 1.809 0.671 0.761 0.242 1.454 0.208 2.001 0.126 0.61-0.092 1.874-0.767 2.138-1.508 0.264-0.741 0.264-1.376 0.185-1.508-0.079-0.133-0.292-0.212-0.608-0.37z"/>
@@ -566,7 +585,7 @@
             let navMenu = document.getElementById('nav-menu');
             let container = document.getElementById('catalog-container');
             
-            navMenu.innerHTML = `<a href="#home">Ana Səhifə</a><button class="cart-nav-btn" onclick="toggleCartModal()">🛒 Səbət (<span id="cart-count">0</span>)</button>`;
+            navMenu.innerHTML = `<a href="#home">Ana Səhifə</a>`;
             container.innerHTML = "";
 
             for (let key in activeSectionsData) {
@@ -606,7 +625,6 @@
             }
         }
 
-        /* Şəkil Böyütmə (Lightbox) Funksiyaları */
         function openLightbox(imgSrc) {
             let modal = document.getElementById('lightboxModal');
             let img = document.getElementById('lightboxImg');
