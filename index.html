@@ -203,6 +203,24 @@
             .card-badge { top: 10px; left: 10px; padding: 4px 10px; font-size: 0.75rem; }
         }
 
+        /* H sütunu üçün xüsusi nişan (Qoşa quş işarəsi və ya fərqli status) */
+        .status-badge {
+            position: absolute;
+            bottom: 6px;
+            left: 6px;
+            background-color: #25d366;
+            color: #000000;
+            padding: 2px 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            border-radius: 6px;
+            z-index: 2;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+        }
+        @media (min-width: 768px) {
+            .status-badge { bottom: 10px; left: 10px; padding: 3px 8px; font-size: 0.7rem; }
+        }
+
         .price-badge {
             position: absolute;
             top: 6px;
@@ -218,6 +236,31 @@
         }
         @media (min-width: 768px) {
             .price-badge { top: 10px; right: 10px; padding: 4px 10px; font-size: 0.8rem; }
+        }
+
+        /* İ sütunu üçün Animasiyalı Endirimli Qiymət */
+        .discount-badge {
+            position: absolute;
+            top: 36px;
+            right: 6px;
+            background-color: #ff3333;
+            color: #ffffff;
+            padding: 3px 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            z-index: 2;
+            animation: pulseDiscount 1.5s infinite;
+        }
+        @media (min-width: 768px) {
+            .discount-badge { top: 42px; right: 10px; padding: 4px 10px; font-size: 0.8rem; }
+        }
+
+        @keyframes pulseDiscount {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.08); opacity: 0.85; background-color: #ff5252; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .card-content {
@@ -606,6 +649,8 @@
                     let image   = String(row[4] || "").trim();
                     let code    = String(row[5] || "").trim();
                     let desc    = String(row[6] || "").trim();
+                    let hFlag   = String(row[7] || "").trim(); // H sütunu (quş işarəsi üçün)
+                    let iPrice  = String(row[8] || "").trim(); // İ sütunu (animasiyalı endirimli qiymət)
 
                     let key = "";
                     if (catText.includes("green") || catText.includes("yaşıl") || catText.includes("зелень") || catText.includes("ot")) key = "green";
@@ -629,7 +674,7 @@
                         if (!activeSectionsData[key]) {
                             activeSectionsData[key] = { name: sectionNames[key], items: [] };
                         }
-                        activeSectionsData[key].items.push({ id: globalIndex++, title, price, size, image, code, desc });
+                        activeSectionsData[key].items.push({ id: globalIndex++, title, price, size, image, code, desc, hFlag, iPrice });
                     }
                 }
             });
@@ -656,6 +701,8 @@
                                     <img src="${item.image}" alt="${item.title}" loading="lazy">
                                     ${item.code ? `<div class="card-badge">Kod: ${item.code}</div>` : ''}
                                     ${item.price ? `<div class="price-badge">${item.price}</div>` : ''}
+                                    ${item.iPrice ? `<div class="discount-badge">🔥 ${item.iPrice}</div>` : ''}
+                                    ${item.hFlag && item.hFlag !== "" && item.hFlag.toLowerCase() !== "false" && item.hFlag !== "0" ? `<div class="status-badge">✓ Xüsusi</div>` : ''}
                                 </div>
                                 <div class="card-content">
                                     <div>
@@ -669,7 +716,7 @@
                                             <span id="qty_val_${item.id}" class="qty-display">1</span>
                                             <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
                                         </div>
-                                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${item.title.replace(/'/g, "\\'")}', '${item.code}', '${item.price}', ${item.id})">Səbətə at</button>
+                                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${item.title.replace(/'/g, "\\'")}', '${item.code}', '${item.iPrice ? item.iPrice : item.price}', ${item.id})">Səbətə at</button>
                                     </div>
                                 </div>
                             </div>
