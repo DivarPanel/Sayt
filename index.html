@@ -203,7 +203,6 @@
             .card-badge { top: 10px; left: 10px; padding: 4px 10px; font-size: 0.75rem; }
         }
 
-        /* H sütunu üçün xüsusi nişan */
         .status-badge {
             position: absolute;
             bottom: 6px;
@@ -238,7 +237,6 @@
             .price-badge { top: 10px; right: 10px; padding: 4px 10px; font-size: 0.8rem; }
         }
 
-        /* İ sütunu üçün Animasiyalı Endirimli Qiymət */
         .discount-badge {
             position: absolute;
             top: 36px;
@@ -359,7 +357,6 @@
             color: #000000;
         }
 
-        /* Toast Bildiriş */
         .toast-notification {
             position: fixed;
             bottom: 80px;
@@ -382,7 +379,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Skeleton Loader */
         .skeleton-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -411,7 +407,6 @@
             100% { transform: translateX(100%); }
         }
 
-        /* Sabit Səbət Düyməsi */
         .fixed-bottom-cart {
             position: fixed;
             bottom: 20px;
@@ -433,7 +428,6 @@
             transition: transform 0.2s;
         }
 
-        /* WhatsApp Düyməsi */
         .fixed-whatsapp {
             position: fixed;
             bottom: 20px;
@@ -452,7 +446,6 @@
         }
         .fixed-whatsapp svg { width: 24px; height: 24px; fill: white; }
 
-        /* Modallar */
         .lightbox-modal, .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -506,85 +499,4 @@
             margin-bottom: 10px;
         }
 
-        .customer-form {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 12px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 12px;
-        }
-        .customer-input {
-            background: #000000;
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 9px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            outline: none;
-            font-family: inherit;
-        }
-        .customer-input:focus { border-color: var(--accent-color); }
-
-        .checkout-whatsapp-btn { background-color: #25d366; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
-
-        footer { text-align: center; padding: 25px; background-color: #050505; color: var(--text-muted); border-top: 1px solid var(--border-color); font-size: 0.8rem; margin-top: auto; }
-        footer .signature { color: var(--accent-color); font-weight: 600; margin-top: 3px; }
-    </style>
-</head>
-<body>
-
-    <nav id="nav-menu">
-        <a href="#home">Ana Səhifə</a>
-    </nav>
-
-    <header id="home">
-        <div class="logo-container">
-            <h1 class="logo-text">DİVARPANEL</h1>
-            <div class="logo-subtext">Studio ve Dizayn</div>
-        </div>
-        <p>İnteryeriniz üçün eksklüziv dekorativ panellər, yaşıllıq, çita, akustik və digər dizayn modelləri.</p>
-    </header>
-
-    <div class="container" id="catalog-container">
-        <div class="skeleton-grid">
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-        </div>
-    </div>
-
-    <div class="toast-notification" id="toastNotification">✓ Səbətə əlavə olundu</div>
-
-    <button class="fixed-bottom-cart" onclick="toggleCartModal()">
-        🛒 Səbətə Bax (<span id="cart-count">0</span>)
-    </button>
-
-    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
-        <div class="lightbox-content" onclick="event.stopPropagation()">
-            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-            <img id="lightboxImg" src="" alt="Böyüdülmüş şəkil">
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="cartModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Səbətiniz</h2>
-                <button class="close-modal" onclick="toggleCartModal()">&times;</button>
-            </div>
-            <div class="cart-items-list" id="cartItemsList">
-                <p style="text-align: center; color: var(--text-muted);">Səbətiniz boşdur.</p>
-            </div>
-            <div class="cart-total">
-                <span>Ümumi Məbləğ:</span>
-                <span id="cartTotalPrice">0 AZN</span>
-            </div>
-
-            <div class="service-note">
-                ℹ️ Çatdırılma və quraşdırılma əlavə xidmətdir.
-            </div>
-            
-            <div class="customer-form">
-                <input type="text
+        .customer-form
