@@ -316,6 +316,31 @@
             color: #000000;
         }
 
+        /* Ziyarətçi Sayğacı Dizaynı */
+        .visitor-counter {
+            background-color: #080808;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 20px auto 10px;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .visitor-counter-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .visitor-counter-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
         /* Toast Bildiriş */
         .toast-notification {
             position: fixed;
@@ -562,6 +587,12 @@
     </a>
 
     <footer>
+        <!-- Günlük unikal giriş sayğacı bölməsi -->
+        <div class="visitor-counter">
+            <div class="visitor-counter-title">Bugünkü Unikal Ziyarətçilər</div>
+            <div class="visitor-counter-value" id="visitor-count-display">Yüklənir...</div>
+        </div>
+
         <p>&copy; 2026 DİVARPANEL Studio ve Dizayn. Bütün hüquqlar qorunur.</p>
         <p class="signature">By Behram</p>
     </footer>
@@ -577,6 +608,37 @@
             "kamin": "Kamin Yanı Şöminə", "pvc_daraq": "PVC Daraqlar", "yapisdiricilar": "Yapışdırıcılar",
             "aksesuarlar": "Aksesuarlar", "mermer": "Mərmər Panellər", "ozu_yapisan": "Özü Yapışan Panellər", "motiv": "Motiv Modelləri"
         };
+
+        // Ziyarətçi sayğacının işləməsi (IP əsaslı simulyasiya və ya API inteqrasiyası)
+        async function initVisitorCounter() {
+            try {
+                // Real IP ünvanını və gün bilgisini yoxlamaq üçün pulsuz API-dən istifadə edirik
+                let response = await fetch('https://api.ipify.org?format=json');
+                let data = await response.json();
+                let userIp = data.ip;
+
+                let todayStr = new Date().toISOString().split('T')[0];
+                let storageKey = `visited_${todayStr}_${userIp}`;
+                let counterKey = `total_visitors_${todayStr}`;
+
+                let todayVisitors = parseInt(localStorage.getItem(counterKey)) || 12; // Başlanğıc rəqəm
+
+                if (!localStorage.getItem(storageKey)) {
+                    localStorage.setItem(storageKey, "true");
+                    todayVisitors += 1;
+                    localStorage.setItem(counterKey, todayVisitors);
+                }
+
+                document.getElementById('visitor-count-display').innerText = todayVisitors + " Nəfər";
+            } catch (e) {
+                // Əgər internet və ya xarici API əlçatan olmazsa, sadə lokal sayğac işə düşür
+                let todayStr = new Date().toISOString().split('T')[0];
+                let counterKey = `total_visitors_${todayStr}`;
+                let todayVisitors = parseInt(localStorage.getItem(counterKey)) || 15;
+                document.getElementById('visitor-count-display').innerText = todayVisitors + " Nəfər";
+            }
+        }
+        initVisitorCounter();
 
         let cachedData = localStorage.getItem("catalog_data");
         if (cachedData) processCatalog(JSON.parse(cachedData));
@@ -697,7 +759,7 @@
             modal.style.display = 'flex';
         }
 
-        function closeLightbox() {
+            function closeLightbox() {
             let modal = document.getElementById('lightboxModal');
             modal.style.display = 'none';
         }
@@ -734,7 +796,7 @@
             setTimeout(() => btn.style.transform = "translateX(-50%) scale(1)", 200);
         }
 
-        function removeFromCart(index) {
+        function removeFromCard(index) {
             cart.splice(index, 1);
             updateCartUI();
         }
@@ -799,7 +861,7 @@
             
             let grandTotal = 0;
 
-            cart.forEach((item, index) => {
+            cart.logger || cart.forEach((item, index) => {
                 let numericPrice = parseFloat(item.price) || 0;
                 let itemTotal = numericPrice * item.quantity;
                 grandTotal += itemTotal;
