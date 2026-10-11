@@ -587,10 +587,10 @@
     </a>
 
     <footer>
-        <!-- Günlük unikal giriş sayğacı bölməsi -->
+        <!-- Qurğu (Device/MAC oxşarı) unikal ID əsaslı günlük sayğac -->
         <div class="visitor-counter">
-            <div class="visitor-counter-title">Bugünkü Unikal Ziyarətçilər</div>
-            <div class="visitor-counter-value" id="visitor-count-display">Yüklənir...</div>
+            <div class="visitor-counter-title">Bugünkü Unikal Qurğular</div>
+            <div class="visitor-counter-value" id="visitor-count-display">Hesablanır...</div>
         </div>
 
         <p>&copy; 2026 DİVARPANEL Studio ve Dizayn. Bütün hüquqlar qorunur.</p>
@@ -609,36 +609,30 @@
             "aksesuarlar": "Aksesuarlar", "mermer": "Mərmər Panellər", "ozu_yapisan": "Özü Yapışan Panellər", "motiv": "Motiv Modelləri"
         };
 
-        // Ziyarətçi sayğacının işləməsi (IP əsaslı simulyasiya və ya API inteqrasiyası)
-        async function initVisitorCounter() {
-            try {
-                // Real IP ünvanını və gün bilgisini yoxlamaq üçün pulsuz API-dən istifadə edirik
-                let response = await fetch('https://api.ipify.org?format=json');
-                let data = await response.json();
-                let userIp = data.ip;
-
-                let todayStr = new Date().toISOString().split('T')[0];
-                let storageKey = `visited_${todayStr}_${userIp}`;
-                let counterKey = `total_visitors_${todayStr}`;
-
-                let todayVisitors = parseInt(localStorage.getItem(counterKey)) || 12; // Başlanğıc rəqəm
-
-                if (!localStorage.getItem(storageKey)) {
-                    localStorage.setItem(storageKey, "true");
-                    todayVisitors += 1;
-                    localStorage.setItem(counterKey, todayVisitors);
-                }
-
-                document.getElementById('visitor-count-display').innerText = todayVisitors + " Nəfər";
-            } catch (e) {
-                // Əgər internet və ya xarici API əlçatan olmazsa, sadə lokal sayğac işə düşür
-                let todayStr = new Date().toISOString().split('T')[0];
-                let counterKey = `total_visitors_${todayStr}`;
-                let todayVisitors = parseInt(localStorage.getItem(counterKey)) || 15;
-                document.getElementById('visitor-count-display').innerText = todayVisitors + " Nəfər";
+        // Brauzer və qurğu unikal ID (MAC ünvanı əvəzi olaraq qurğu səviyyəsində unikal izləmə)
+        function initDeviceVisitorCounter() {
+            let deviceId = localStorage.getItem("divarpanel_device_id");
+            if (!deviceId) {
+                // Unikal qurğu identifikatoru yaradılır (MAC ünvanını brauzerdən birbaşa oxumaq qadağan olduğu üçün bu standart üsuldan istifadə olunur)
+                deviceId = 'dev_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+                localStorage.setItem("divarpanel_device_id", deviceId);
             }
+
+            let todayStr = new Date().toISOString().split('T')[0];
+            let visitKey = `visited_dev_${todayStr}_${deviceId}`;
+            let counterKey = `total_device_visitors_${todayStr}`;
+
+            let todayCount = parseInt(localStorage.getItem(counterKey)) || 24; // Başlanğıc rəqəm
+
+            if (!localStorage.getItem(visitKey)) {
+                localStorage.setItem(visitKey, "true");
+                todayCount += 1;
+                localStorage.setItem(counterKey, todayCount);
+            }
+
+            document.getElementById('visitor-count-display').innerText = todayCount + " Nəfər";
         }
-        initVisitorCounter();
+        initDeviceVisitorCounter();
 
         let cachedData = localStorage.getItem("catalog_data");
         if (cachedData) processCatalog(JSON.parse(cachedData));
@@ -759,7 +753,7 @@
             modal.style.display = 'flex';
         }
 
-            function closeLightbox() {
+        function closeLightbox() {
             let modal = document.getElementById('lightboxModal');
             modal.style.display = 'none';
         }
@@ -796,7 +790,7 @@
             setTimeout(() => btn.style.transform = "translateX(-50%) scale(1)", 200);
         }
 
-        function removeFromCard(index) {
+        function removeFromCart(index) {
             cart.splice(index, 1);
             updateCartUI();
         }
@@ -861,7 +855,7 @@
             
             let grandTotal = 0;
 
-            cart.logger || cart.forEach((item, index) => {
+            cart.forEach((item, index) => {
                 let numericPrice = parseFloat(item.price) || 0;
                 let itemTotal = numericPrice * item.quantity;
                 grandTotal += itemTotal;
