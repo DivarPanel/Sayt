@@ -487,6 +487,8 @@
 
         footer { text-align: center; padding: 25px; background-color: #050505; color: var(--text-muted); border-top: 1px solid var(--border-color); font-size: 0.8rem; margin-top: auto; }
         footer .signature { color: var(--accent-color); font-weight: 600; margin-top: 3px; }
+        footer .visitor-counter { font-size: 0.75rem; color: #888; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        footer .visitor-counter span { color: var(--accent-color); font-weight: 700; }
     </style>
 </head>
 <body>
@@ -564,11 +566,49 @@
     <footer>
         <p>&copy; 2026 DİVARPANEL Studio ve Dizayn. Bütün hüquqlar qorunur.</p>
         <p class="signature">By Behram</p>
+        <div class="visitor-counter">👁️ Bugunkü unikal ziyarətçi: <span id="todayVisitsCount">...</span></div>
     </footer>
 
     <script>
         const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
         let cart = [];
+
+        // --- Ziyarətçi Sayğacı və Google Cədvəl Sinxronizasiyası ---
+        function trackVisitor() {
+            let deviceId = localStorage.getItem("dp_device_id");
+            if (!deviceId) {
+                deviceId = 'dev_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
+                localStorage.setItem("dp_device_id", deviceId);
+            }
+
+            let todayStr = new Date().toISOString().split('T')[0];
+            let lastVisitDate = localStorage.getItem("dp_last_visit_date");
+
+            // Əgər qurğu bu gün ilk dəfə daxil olursa, Cədvələ (Statistika vərəqinə) məlumat göndəririk
+            if (lastVisitDate !== todayStr) {
+                localStorage.setItem("dp_last_visit_date", todayStr);
+                
+                fetch(webappUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ deviceId: deviceId })
+                }).catch(err => console.log("Statistika göndərilmədi:", err));
+            }
+
+            // Brauzer yaddaşında bugünkü unikal ziyarətçi sayını yeniləyirik
+            let visitCounterData = JSON.parse(localStorage.getItem("dp_visitor_stats") || "{}");
+            if (visitCounterData.date !== todayStr) {
+                visitCounterData = { date: todayStr, devices: [deviceId] };
+            } else {
+                if (!visitCounterData.devices.includes(deviceId)) {
+                    visitCounterData.devices.push(deviceId);
+                }
+            }
+            localStorage.setItem("dp_visitor_stats", JSON.stringify(visitCounterData));
+            document.getElementById("todayVisitsCount").innerText = visitCounterData.devices.length;
+        }
+
+        trackVisitor();
 
         let sectionNames = {
             "green": "Yaşıllıq Modelləri", "cita": "Dekorativ Çita", "laminat": "Laminat Modelləri",
