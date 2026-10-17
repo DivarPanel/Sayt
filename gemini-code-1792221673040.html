@@ -351,133 +351,154 @@
         <p class="signature">By Behram</p>
     </footer>
 
-    <script>
-        const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
-        let productsList = [];
+   <script>
+    const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
+    let productsList = [];
 
-        // Google Sheets-dən məhsulları çəkirik
-        fetch(webappUrl)
-            .then(response => response.json())
-            .then(rows => {
-                const productRows = rows.slice(1);
-                let selectElement = document.getElementById('productSelect');
-                selectElement.innerHTML = '';
+    // Google Sheets-dən məhsulları çəkirik
+    fetch(webappUrl)
+        .then(response => response.json())
+        .then(rows => {
+            const productRows = rows.slice(1);
+            let selectElement = document.getElementById('productSelect');
+            selectElement.innerHTML = '';
 
-                productRows.forEach((row, index) => {
-                    if (row.length >= 6) {
-                        let title = String(row[1] || "").trim();
-                        let priceStr = String(row[2] || "").trim();
-                        let sizeStr = String(row[3] || "").trim();
-                        let image = String(row[4] || "").trim();
-                        let code = String(row[5] || "").trim();
+            productRows.forEach((row, index) => {
+                if (row.length >= 6) {
+                    let title = String(row[1] || "").trim();
+                    let priceStr = String(row[2] || "").trim();
+                    let sizeStr = String(row[3] || "").trim(); // Məsələn: "280*120" və ya "2.8x1.2"
+                    let image = String(row[4] || "").trim();
+                    let code = String(row[5] || "").trim();
 
-                        // Qiymətdən rəqəmi çıxarırıq (məs: "45 AZN" -> 45)
-                        let numericPrice = parseFloat(priceStr.replace(/[^0-9.]/g, '')) || 0;
+                    let numericPrice = parseFloat(priceStr.replace(/[^0-9.]/g, '')) || 0;
 
-                        if (title && image) {
-                            productsList.push({
-                                title: title + (code ? ` (${code})` : ''),
-                                price: numericPrice,
-                                priceText: priceStr || 'Razılaşma ilə',
-                                image: image,
-                                size: sizeStr
-                            });
+                    // Ölçü sətrindən rəqəmləri çıxarırıq (en və hündürlük)
+                    let pWidth = 1;  // Standart en (metrlə)
+                    let pHeight = 1; // Standart hündürlük (metrlə)
 
-                            let option = document.createElement('option');
-                            option.value = productsList.length - 1;
-                            option.textContent = `${title} - ${priceStr || 'Razılaşma'}`;
-                            selectElement.appendChild(option);
+                    if (sizeStr) {
+                        let numbers = sizeStr.match(/[\d.,]+/g);
+                        if (numbers && numbers.length >= 2) {
+                            let n1 = parseFloat(numbers[0].replace(',', '.'));
+                            let n2 = parseFloat(numbers[1].replace(',', '.'));
+                            
+                            // Əgər rəqəmlər 10-dan böyükdürsə deməli santimetrdir, metrə çeviririk
+                            pWidth = n1 > 10 ? n1 / 100 : n1;
+                            pHeight = n2 > 10 ? n2 / 100 : n2;
+                        } else if (numbers && numbers.length === 1) {
+                            let n1 = parseFloat(numbers[0].replace(',', '.'));
+                            pWidth = n1 > 10 ? n1 / 100 : n1;
+                            pHeight = pWidth; // Kvadrat və ya tək ölçü
                         }
                     }
-                });
 
-                if (productsList.length > 0) {
-                    updatePreviewAndCalc();
+                    if (title && image) {
+                        productsList.push({
+                            title: title + (code ? ` (${code})` : ''),
+                            price: numericPrice,
+                            priceText: priceStr || 'Razılaşma ilə',
+                            image: image,
+                            sizeText: sizeStr || 'Standart',
+                            pWidth: pWidth > 0 ? pWidth : 1,
+                            pHeight: pHeight > 0 ? pHeight : 1
+                        });
+
+                        let option = document.createElement('option');
+                        option.value = productsList.length - 1;
+                        option.textContent = `${title} (${sizeStr || 'Standart'}) - ${priceStr || 'Razılaşma'}`;
+                        selectElement.appendChild(option);
+                    }
                 }
-            })
-            .catch(error => {
-                console.error("Məhsullar yüklənmədi:", error);
-                document.getElementById('productSelect').innerHTML = '<option>Məhuları yükləmək olmadı</option>';
             });
 
-        document.getElementById('calculateBtn').addEventListener('click', updatePreviewAndCalc);
-        document.getElementById('wallWidth').addEventListener('input', updatePreviewAndCalc);
-        document.getElementById('wallHeight').addEventListener('input', updatePreviewAndCalc);
-        document.getElementById('productSelect').addEventListener('change', updatePreviewAndCalc);
-
-        function updatePreviewAndCalc() {
-            let width = parseFloat(document.getElementById('wallWidth').value) || 0;
-            let height = parseFloat(document.getElementById('wallHeight').value) || 0;
-            let selectedIndex = document.getElementById('productSelect').value;
-
-            if (productsList.length === 0 || selectedIndex === "") return;
-
-            let currentProduct = productsList[selectedIndex];
-
-            // Önizləməni (şəkil və qiymət) yeniləyirik
-            let previewBox = document.getElementById('productPreviewBox');
-            previewBox.style.display = 'flex';
-            document.getElementById('previewImg').src = currentProduct.image;
-            document.getElementById('previewTitle').textContent = currentProduct.title;
-            document.getElementById('previewPrice').textContent = `Qiymət: ${currentProduct.priceText}`;
-
-            if (width <= 0 || height <= 0) return;
-
-            let wallArea = width * height;
-            
-            // Standart panel hesablama əmsalı (təxmini vahid ölçü əsasında və ya adambaşına)
-            // Əgər cədvəldə ölçü varsa onu istifadə edirik, yoxdursa standart 1x1 götürürük
-            let totalPanels = Math.ceil(wallArea / 1.5); // Təxmini sahə əmsalı
-            if (currentProduct.price > 0) {
-                // Əgər ədəd ilə satılırsa sahəyə görə hesablayırıq
-                totalPanels = Math.ceil(wallArea * 2); // Nümunəvi hesablama düsturu
+            if (productsList.length > 0) {
+                updatePreviewAndCalc();
             }
-            
-            let totalPrice = totalPanels * currentProduct.price;
+        })
+        .catch(error => {
+            console.error("Məhsullar yüklənmədi:", error);
+            document.getElementById('productSelect').innerHTML = '<option>Məhsulları yükləmək olmadı</option>';
+        });
 
-            // Nəticələri yazdırırıq
-            document.getElementById('wallArea').textContent = wallArea.toFixed(2);
-            document.getElementById('neededPanels').textContent = totalPanels;
-            document.getElementById('totalPrice').textContent = currentProduct.price > 0 ? totalPrice + ' AZN' : 'Razılaşma ilə';
+    document.getElementById('calculateBtn').addEventListener('click', updatePreviewAndCalc);
+    document.getElementById('wallWidth').addEventListener('input', updatePreviewAndCalc);
+    document.getElementById('wallHeight').addEventListener('input', updatePreviewAndCalc);
+    document.getElementById('productSelect').addEventListener('change', updatePreviewAndCalc);
 
-            // Sxem
-            let panelsGrid = document.getElementById('panelsGrid');
-            let cols = Math.min(Math.ceil(width * 3), 12);
-            let rows = Math.min(Math.ceil(height * 3), 10);
-            panelsGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-            panelsGrid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-            
-            panelsGrid.innerHTML = '';
-            for (let i = 0; i < Math.min(cols * rows, 50); i++) {
-                let panelDiv = document.createElement('div');
-                panelDiv.classList.add('panel-item');
-                panelsGrid.appendChild(panelDiv);
-            }
+    function updatePreviewAndCalc() {
+        let wallWidth = parseFloat(document.getElementById('wallWidth').value) || 0;
+        let wallHeight = parseFloat(document.getElementById('wallHeight').value) || 0;
+        let selectedIndex = document.getElementById('productSelect').value;
+
+        if (productsList.length === 0 || selectedIndex === "") return;
+
+        let currentProduct = productsList[selectedIndex];
+
+        // Önizləməni yeniləyirik
+        let previewBox = document.getElementById('productPreviewBox');
+        previewBox.style.display = 'flex';
+        document.getElementById('previewImg').src = currentProduct.image;
+        document.getElementById('previewTitle').textContent = `${currentProduct.title} [Ölçü: ${currentProduct.sizeText}]`;
+        document.getElementById('previewPrice').textContent = `Qiymət: ${currentProduct.priceText}`;
+
+        if (wallWidth <= 0 || wallHeight <= 0) return;
+
+        let wallArea = wallWidth * wallHeight;
+        
+        // Real ölçülərə əsasən panel sayının hesablanması:
+        // Enə və hündürlüyə görə neçə ədəd gedəcəyini hesablayırıq
+        let panelsInWidth = Math.ceil(wallWidth / currentProduct.pWidth);
+        let panelsInHeight = Math.ceil(wallHeight / currentProduct.pHeight);
+        let totalPanels = panelsInWidth * panelsInHeight;
+
+        let totalPrice = totalPanels * currentProduct.price;
+
+        // Nəticələri ekrana yazdırırıq
+        document.getElementById('wallArea').textContent = wallArea.toFixed(2);
+        document.getElementById('neededPanels').textContent = totalPanels;
+        document.getElementById('totalPrice').textContent = currentProduct.price > 0 ? totalPrice + ' AZN' : 'Razılaşma ilə';
+
+        // Sxem
+        let panelsGrid = document.getElementById('panelsGrid');
+        let cols = Math.min(panelsInWidth, 12);
+        let rows = Math.min(panelsInHeight, 10);
+        panelsGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        panelsGrid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+        
+        panelsGrid.innerHTML = '';
+        let renderCount = Math.min(panelsInWidth * panelsInHeight, 50);
+        for (let i = 0; i < renderCount; i++) {
+            let panelDiv = document.createElement('div');
+            panelDiv.classList.add('panel-item');
+            panelsGrid.appendChild(panelDiv);
         }
+    }
 
-        function sendWhatsAppOrder() {
-            let width = document.getElementById('wallWidth').value;
-            let height = document.getElementById('wallHeight').value;
-            let selectedIndex = document.getElementById('productSelect').value;
-            if (productsList.length === 0 || selectedIndex === "") return;
-            
-            let currentProduct = productsList[selectedIndex];
-            let wallArea = document.getElementById('wallArea').textContent;
-            let neededPanels = document.getElementById('neededPanels').textContent;
-            let totalPrice = document.getElementById('totalPrice').textContent;
+    function sendWhatsAppOrder() {
+        let width = document.getElementById('wallWidth').value;
+        let height = document.getElementById('wallHeight').value;
+        let selectedIndex = document.getElementById('productSelect').value;
+        if (productsList.length === 0 || selectedIndex === "") return;
+        
+        let currentProduct = productsList[selectedIndex];
+        let wallArea = document.getElementById('wallArea').textContent;
+        let neededPanels = document.getElementById('neededPanels').textContent;
+        let totalPrice = document.getElementById('totalPrice').textContent;
 
-            let phoneNumber = "994702283682";
-            let message = `*Divar Kalkulyatoru Sifarişi - DİVARPANEL*\n\n` +
-                          `📦 *Seçilmiş Məhsul:* ${currentProduct.title}\n` +
-                          `💰 *Bยนตร์ Vahid Qiyməti:* ${currentProduct.priceText}\n` +
-                          `📐 *Divar Ölçüləri:* ${width}m x ${height}m (${wallArea} m²)\n` +
-                          `🔢 *Təxmini Say:* ${neededPanels} ədəd\n` +
-                          `💵 *Yekun Məbləğ:* ${totalPrice}\n\n` +
-                          `Salam, bu hesablama üzrə sifariş vermək istəyirəm. Şəkil: ${currentProduct.image}`;
+        let phoneNumber = "994702283682";
+        let message = `*Divar Kalkulyatoru Sifarişi - DİVARPANEL*\n\n` +
+                      `📦 *Seçilmiş Məhsul:* ${currentProduct.title}\n` +
+                      `📏 *Məhsul Ölçüsü:* ${currentProduct.sizeText}\n` +
+                      `💰 *Vahid Qiyməti:* ${currentProduct.priceText}\n` +
+                      `📐 *Divar Ölçüləri:* ${width}m x ${height}m (${wallArea} m²)\n` +
+                      `🔢 *Lazımi Say:* ${neededPanels} ədəd\n` +
+                      `💵 *Yekun Məbləğ:* ${totalPrice}\n\n` +
+                      `Salam, bu hesablama üzrə sifariş vermək istəyirəm. Şəkil: ${currentProduct.image}`;
 
-            let encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
-        }
-    </script>
+        let encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
+    }
+</script>
 </body>
 </html>
