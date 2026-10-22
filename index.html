@@ -155,12 +155,51 @@
             transform: translateY(-2px);
         }
 
+        /* Endirim və Kampaniya Animasiyaları (açıqlamasında '...' olanlar üçün) */
+        @keyframes neonDiscountBorder {
+            0%   { border-color: #ff0000; box-shadow: 0 0 5px rgba(255,0,0,0.5); transform: scale(1); }
+            50%  { border-color: #ffea00; box-shadow: 0 0 15px rgba(255,234,0,0.9); transform: scale(1.02); }
+            100% { border-color: #ff0000; box-shadow: 0 0 5px rgba(255,0,0,0.5); transform: scale(1); }
+        }
+        
+        .discount-card {
+            animation: neonDiscountBorder 1.2s infinite;
+            border-width: 2px;
+        }
+
+        @keyframes blinkPrice {
+            0%   { background-color: #ff0000; color: #ffffff; transform: scale(1); }
+            50%  { background-color: #ffea00; color: #000000; transform: scale(1.15); box-shadow: 0 0 15px #ffea00; }
+            100% { background-color: #ff0000; color: #ffffff; transform: scale(1); }
+        }
+
+        .discount-price {
+            animation: blinkPrice 0.8s infinite !important;
+            font-weight: 900 !important;
+            border: 1px solid #fff;
+            z-index: 10;
+        }
+
+        @keyframes textBlinkPrice {
+            0%   { color: #ff0000; text-shadow: 0 0 8px #ff0000; transform: scale(1); }
+            50%  { color: #ffea00; text-shadow: 0 0 15px #ffea00; transform: scale(1.1); }
+            100% { color: #ff0000; text-shadow: 0 0 8px #ff0000; transform: scale(1); }
+        }
+
+        .discount-price-text {
+            animation: textBlinkPrice 0.8s infinite !important;
+            display: inline-block;
+        }
+
         .card-img-container {
             width: 100%;
             height: 140px;
             overflow: hidden;
             position: relative;
             background-color: #080808;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         @media (min-width: 768px) {
@@ -179,7 +218,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.4s ease, opacity 0.3s ease;
         }
 
         .card-img-container.large-img-container img {
@@ -188,6 +227,61 @@
         }
 
         .card:hover .card-img-container img { transform: scale(1.04); }
+
+        /* Slayd İdarəetmə Düymələri */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: 1px solid rgba(255, 119, 0, 0.4);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        @media (min-width: 768px) {
+            .slider-btn { width: 34px; height: 34px; font-size: 1.1rem; }
+        }
+
+        .slider-btn:hover {
+            background: var(--accent-color);
+            color: black;
+        }
+
+        .slider-btn-prev { left: 5px; }
+        .slider-btn-next { right: 5px; }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 4px;
+            z-index: 5;
+        }
+
+        .slider-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: var(--accent-color);
+            transform: scale(1.3);
+        }
 
         .card-badge {
             position: absolute;
@@ -200,7 +294,7 @@
             font-weight: 700;
             border-radius: 10px;
             border: 1px solid rgba(255, 119, 0, 0.4);
-            z-index: 2;
+            z-index: 6;
         }
         @media (min-width: 768px) {
             .card-badge { top: 10px; left: 10px; padding: 4px 10px; font-size: 0.75rem; }
@@ -217,7 +311,8 @@
             font-weight: 700;
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            z-index: 2;
+            z-index: 6;
+            transition: all 0.3s ease;
         }
         @media (min-width: 768px) {
             .price-badge { top: 10px; right: 10px; padding: 4px 10px; font-size: 0.8rem; }
@@ -330,6 +425,7 @@
             display: none;
             flex-direction: column;
             gap: 20px;
+            transition: all 0.3s ease;
         }
         .back-to-catalog {
             display: inline-flex;
@@ -350,14 +446,25 @@
         @media (min-width: 768px) {
             .product-detail-grid { grid-template-columns: 1fr 1fr; }
         }
+        
+        .detail-img-wrapper {
+            position: relative;
+            width: 100%;
+            background: #050505;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
         .product-detail-img {
             width: 100%;
             max-height: 350px;
             object-fit: contain;
-            background: #050505;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
             cursor: pointer;
+            transition: opacity 0.3s ease;
         }
 
         /* Toast Bildiriş */
@@ -400,7 +507,7 @@
             position: relative;
             overflow: hidden;
         }
-        .skeleton-card::after {
+          .skeleton-card::after {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -411,7 +518,8 @@
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-   /* Sabit Səbət Düyməsi */
+
+        /* Sabit Səbət Düyməsi */
         .fixed-bottom-cart {
             position: fixed;
             bottom: 20px;
@@ -559,12 +667,13 @@
             </div>
         </div>
 
-        <!-- Məhsul Detal Səhifəsi (Əvvəlcə gizlidir) -->
+        <!-- Məhsul Detal Səhifəsi -->
         <div id="product-detail-view">
             <a class="back-to-catalog" onclick="goBackToCatalog()">← Kataloqa qayıt</a>
             <div class="product-detail-grid">
-                <div>
+                <div class="detail-img-wrapper">
                     <img id="detailImg" src="" alt="Məhsul şəkli" class="product-detail-img" onclick="openLightbox(this.src)">
+                    <!-- Slayd düymələri dinamik əlavə ediləcək -->
                 </div>
                 <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 15px;">
                     <div>
@@ -646,399 +755,535 @@
     <a href="https://wa.me/994702283682?text=Salam,%20suallarım%20var." class="fixed-whatsapp" target="_blank" title="WhatsApp ilə əlaqə">
         <svg viewBox="0 0 32 32">
             <path d="M16.002 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.135 8.048l-2.135 7.799 8.006-2.102c2.348 1.281 5.013 1.957 7.724 1.957 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16.002 29.333c-2.42 0-4.786-0.651-6.852-1.884l-0.491-0.292-5.094 1.338 1.359-4.966-0.319-0.507c-1.341-2.128-2.049-4.595-2.049-7.121 0-7.353 5.981-13.333 13.333-13.333s13.333 5.981 13.333 13.333c0 7.353-5.981 13.333-13.333 13.333zM21.905 19.467c-0.317-0.158-1.874-0.925-2.165-1.031-0.292-0.106-0.503-0.158-0.715 0.158s-0.82 1.031-1.005 1.243c-0.185 0.212-0.371 0.239-0.688 0.081-0.317-0.158-1.34-0.494-2.553-1.574-0.943-0.84-1.579-1.876-1.765-2.193-0.185-0.317-0.02-0.489 0.139-0.647 0.143-0.142 0.317-0.371 0.475-0.556 0.158-0.185 0.211-0.317 0.317-0.529 0.106-0.212 0.053-0.397-0.026-0.556s-0.715-1.724-0.98-2.362c-0.259-0.619-0.523-0.535-0.715-0.545-0.185-0.01-0.397-0.012-0.608-0.012s-0.556 0.079-0.847 0.397c-0.292 0.317-1.112 1.086-1.112 2.647s1.139 3.071 1.297 3.284c0.158 0.212 2.241 3.42 5.428 4.796 0.758 0.327 1.349 0.523 1.809 0.671 0.761 0.242 1.454 0.208 2.001 0.126 0.61-0.092 1.874-0.767 2.138-1.508 0.264-0.741 0.264-1.376 0.185-1.508-0.079-0.133-0.292-0.212-0.608-0.37z"/>
-    </svg>
-</a>
+        </svg>
+    </a>
 
-<footer>
-    <p>&copy; 2026 DİVARPANEL Studio ve Dizayn. Bütün hüquqlar qorunur.</p>
-    <p class="signature">By Behram</p>
-    <div class="visitor-counter">👁️ Bugunkü unikal ziyarətçi: <span id="todayVisitsCount">...</span></div>
-</footer>
+    <footer>
+        <p>&copy; 2026 DİVARPANEL Studio ve Dizayn. Bütün hüquqlar qorunur.</p>
+        <p class="signature">By Behram</p>
+        <div class="visitor-counter">👁️ Bugunkü unikal ziyarətçi: <span id="todayVisitsCount">...</span></div>
+    </footer>
 
-<script>
-    const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
-    let cart = [];
-    let globalProductsList = [];
+    <script>
+        const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
+        let cart = [];
+        let globalProductsList = [];
 
-    // --- Ziyarətçi Sayğacı ---
-    function trackVisitor() {
-        let deviceId = localStorage.getItem("dp_device_id");
-        if (!deviceId) {
-            deviceId = 'dev_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
-            localStorage.setItem("dp_device_id", deviceId);
-        }
-
-        let todayStr = new Date().toISOString().split('T')[0];
-        let lastVisitDate = localStorage.getItem("dp_last_visit_date");
-
-        if (lastVisitDate !== todayStr) {
-            localStorage.setItem("dp_last_visit_date", todayStr);
-            fetch(webappUrl, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain" },
-                body: JSON.stringify({ deviceId: deviceId })
-            }).catch(err => console.log("Statistika göndərilmədi:", err));
-        }
-
-        let visitCounterData = JSON.parse(localStorage.getItem("dp_visitor_stats") || "{}");
-        if (visitCounterData.date !== todayStr) {
-            visitCounterData = { date: todayStr, devices: [deviceId] };
-        } else {
-            if (!visitCounterData.devices.includes(deviceId)) {
-                visitCounterData.devices.push(deviceId);
+        function trackVisitor() {
+            let deviceId = localStorage.getItem("dp_device_id");
+            if (!deviceId) {
+                deviceId = 'dev_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
+                localStorage.setItem("dp_device_id", deviceId);
             }
-        }
-        localStorage.setItem("dp_visitor_stats", JSON.stringify(visitCounterData));
-        document.getElementById("todayVisitsCount").innerText = visitCounterData.devices.length;
-    }
 
-    trackVisitor();
+            let todayStr = new Date().toISOString().split('T')[0];
+            let lastVisitDate = localStorage.getItem("dp_last_visit_date");
 
-    let sectionNames = {
-        "green": "Yaşıllıq Modelləri", "cita": "Dekorativ Çita", "laminat": "Laminat Modelləri",
-        "qaya": "Qaya Panelləri", "guzgu": "Güzgü Modelləri", "bambuk": "Bambuk Panellər",
-        "mdf_daraq": "MDF Daraq", "akustik_daraq": "Akustik Daraq", "akustik_paneller": "Akustik Panellər",
-        "kamin": "Kamin Yanı Şöminə", "pvc_daraq": "PVC Daraqlar", "yapisdiricilar": "Yapışdırıcılar",
-        "aksesuarlar": "Aksesuarlar", "mermer": "Mərmər Panellər", "ozu_yapisan": "Özü Yapışan Panellər", "motiv": "Motiv Modelləri"
-    };
+            if (lastVisitDate !== todayStr) {
+                localStorage.setItem("dp_last_visit_date", todayStr);
+                fetch(webappUrl, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ deviceId: deviceId })
+                }).catch(err => console.log("Statistika göndərilmədi:", err));
+            }
 
-    let cachedData = localStorage.getItem("catalog_data");
-    if (cachedData) processCatalog(JSON.parse(cachedData));
-
-    fetch(webappUrl)
-        .then(response => response.json())
-        .then(rows => {
-            localStorage.setItem("catalog_data", JSON.stringify(rows));
-            processCatalog(rows);
-        })
-        .catch(error => {
-            console.error(error);
-            if (!cachedData) document.getElementById('catalog-container').innerHTML = '<p style="text-align: center; color: #ff5252;">Məlumatları yükləmək mümkün olmadı.</p>';
-        });
-
-    function processCatalog(rows) {
-        const productRows = rows.slice(1);
-        let activeSectionsData = {};
-        let globalIndex = 0;
-        globalProductsList = [];
-
-        productRows.forEach(row => {
-            if (row.length >= 6) {
-                let catText = String(row[0] || "").trim().toLowerCase();
-                let title   = String(row[1] || "").trim();
-                let price   = String(row[2] || "").trim();
-                let size    = String(row[3] || "").trim();
-                let image   = String(row[4] || "").trim();
-                let code    = String(row[5] || "").trim();
-                let desc    = String(row[6] || "").trim();
-
-                let key = "";
-                if (catText.includes("green") || catText.includes("yaşıl") || catText.includes("зелень") || catText.includes("ot")) key = "green";
-                else if (catText.includes("cita") || catText.includes("çita") || catText.includes("рейка")) key = "cita";
-                else if (catText.includes("laminat") || catText.includes("ламинат")) key = "laminat";
-                else if (catText.includes("qaya") || catText.includes("daş") || catText.includes("скала")) key = "qaya";
-                else if (catText.includes("guzgu") || catText.includes("зеркало")) key = "guzgu";
-                else if (catText.includes("bambuk") || catText.includes("бамбук")) key = "bambuk";
-                else if (catText.includes("mdf daraq") || catText.includes("mdf")) key = "mdf_daraq";
-                else if (catText.includes("akustik daraq")) key = "akustik_daraq";
-                else if (catText.includes("akustik panel") || catText.includes("akustik")) key = "akustik_paneller";
-                else if (catText.includes("kamin") || catText.includes("somine") || catText.includes("şöminə")) key = "kamin";
-                else if (catText.includes("pvc daraq")) key = "pvc_daraq";
-                else if (catText.includes("yapisdirici") || catText.includes("yapışqan")) key = "yapisdiricilar";
-                else if (catText.includes("aksesuar")) key = "aksesuarlar";
-                else if (catText.includes("mermer") || catText.includes("mərmər")) key = "mermer";
-                else if (catText.includes("ozu yapisan") || catText.includes("özü yapışan")) key = "ozu_yapisan";
-                else if (catText.includes("motiv")) key = "motiv";
-
-                if (key && image) {
-                    let productObj = { id: globalIndex++, title, price, size, image, code, desc };
-                    globalProductsList.push(productObj);
-
-                    if (!activeSectionsData[key]) {
-                        activeSectionsData[key] = { name: sectionNames[key], items: [] };
-                    }
-                    activeSectionsData[key].items.push(productObj);
+            let visitCounterData = JSON.parse(localStorage.getItem("dp_visitor_stats") || "{}");
+            if (visitCounterData.date !== todayStr) {
+                visitCounterData = { date: todayStr, devices: [deviceId] };
+            } else {
+                if (!visitCounterData.devices.includes(deviceId)) {
+                    visitCounterData.devices.push(deviceId);
                 }
             }
-        });
-
-        renderNavigationAndCatalog(activeSectionsData);
-        checkUrlForProduct();
-    }
-
-    function renderNavigationAndCatalog(activeSectionsData) {
-        let navMenu = document.getElementById('nav-menu');
-        let container = document.getElementById('catalog-container');
-        
-        navMenu.innerHTML = `<a href="#home">Ana Səhifə</a>`;
-        container.innerHTML = "";
-
-        for (let key in activeSectionsData) {
-            let sec = activeSectionsData[key];
-            if (sec.items.length > 0) {
-                navMenu.innerHTML += `<a href="#${key}" onclick="goBackToCatalog()">${sec.name}</a>`;
-
-                let isBambuk = (key === "bambuk");
-                let sectionHtml = `<h2 id="${key}" class="section-title">${sec.name}</h2><div class="grid">`;
-                
-                sec.items.forEach(item => {
-                    sectionHtml += `
-                        <div class="card" onclick="openProductPage(${item.id})">
-                            <div class="card-img-container ${isBambuk ? 'large-img-container' : ''}">
-                                <img src="${item.image}" alt="${item.title}" loading="lazy">
-                                ${item.code ? `<div class="card-badge">Kod: ${item.code}</div>` : ''}
-                                ${item.price ? `<div class="price-badge">${item.price}</div>` : ''}
-                            </div>
-                            <div class="card-content">
-                                <div>
-                                    <h3 class="card-title">${item.title}</h3>
-                                    ${item.size ? `<div class="info-group"><div class="info-label">Ölçü</div><div class="info-value">${item.size}</div></div>` : ''}
-                                    ${item.desc ? `<div class="info-group"><div class="info-label">Açıqlama</div><div class="info-value">${item.desc}</div></div>` : ''}
-                                </div>
-                                <div class="card-actions">
-                                    <div class="quantity-control" onclick="event.stopPropagation()">
-                                        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
-                                        <span id="qty_val_${item.id}" class="qty-display">1</span>
-                                        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
-                                    </div>
-                                    <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCartDirect(${item.id})">Səbətə at</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                sectionHtml += `</div>`;
-                container.innerHTML += sectionHtml;
-            }
+            localStorage.setItem("dp_visitor_stats", JSON.stringify(visitCounterData));
+            document.getElementById("todayVisitsCount").innerText = visitCounterData.devices.length;
         }
-    }
 
-    function changeQty(id, delta) {
-        let display = document.getElementById(`qty_val_${id}`);
-        if (!display) return;
-        let currentVal = parseInt(display.innerText) || 1;
-        let newVal = currentVal + delta;
-        if (newVal < 1) newVal = 1;
-        display.innerText = newVal;
-    }
+        trackVisitor();
 
-    function changeDetailQty(delta) {
-        let display = document.getElementById('detail_qty_val');
-        if (!display) return;
-        let currentVal = parseInt(display.innerText) || 1;
-        let newVal = currentVal + delta;
-        if (newVal < 1) newVal = 1;
-        display.innerText = newVal;
-    }
-
-    // Məhsul səhifəsini açmaq
-    function openProductPage(id) {
-        let product = globalProductsList.find(p => p.id === id);
-        if (!product) return;
-
-        window.history.pushState({ productId: id }, "", `?product=${id}`);
-        showProductView(product);
-    }
-
-    function showProductView(product) {
-        document.getElementById('catalog-container').style.display = 'none';
-        document.getElementById('main-header').style.display = 'none';
-        document.getElementById('product-detail-view').style.display = 'flex';
-
-        document.getElementById('detailImg').src = product.image;
-        document.getElementById('detailTitle').innerText = product.title;
-        document.getElementById('detail_qty_val').innerText = document.getElementById(`qty_val_${product.id}`) ? document.getElementById(`qty_val_${product.id}`).innerText : '1';
-
-        let codeBox = document.getElementById('detailCodeBox');
-        if (product.code) {
-            document.getElementById('detailCode').innerText = product.code;
-            codeBox.style.display = 'block';
-        } else { codeBox.style.display = 'none'; }
-
-        let sizeBox = document.getElementById('detailSizeBox');
-        if (product.size) {
-            document.getElementById('detailSize').innerText = product.size;
-            sizeBox.style.display = 'block';
-        } else { sizeBox.style.display = 'none'; }
-
-        let descBox = document.getElementById('detailDescBox');
-        if (product.desc) {
-            document.getElementById('detailDesc').innerText = product.desc;
-            descBox.style.display = 'block';
-        } else { descBox.style.display = 'none'; }
-
-        document.getElementById('detailPrice').innerText = product.price ? product.price : 'Razılaşma ilə';
-
-        let addBtn = document.getElementById('detailAddToCartBtn');
-        addBtn.onclick = function() {
-            let qty = parseInt(document.getElementById('detail_qty_val').innerText) || 1;
-            let cardDisplay = document.getElementById(`qty_val_${product.id}`);
-            if (cardDisplay) cardDisplay.innerText = qty;
-
-            addToCart(product.title, product.code, product.price, qty);
+        let sectionNames = {
+            "green": "Yaşıllıq Modelləri", "cita": "Dekorativ Çita", "laminat": "Laminat Modelləri",
+            "qaya": "Qaya Panelləri", "guzgu": "Güzgü Modelləri", "bambuk": "Bambuk Panellər",
+            "mdf_daraq": "MDF Daraq", "akustik_daraq": "Akustik Daraq", "akustik_paneller": "Akustik Panellər",
+            "kamin": "Kamin Yanı Şöminə", "pvc_daraq": "PVC Daraqlar", "yapisdiricilar": "Yapışdırıcılar",
+            "aksesuarlar": "Aksesuarlar", "mermer": "Mərmər Panellər", "ozu_yapisan": "Özü Yapışan Panellər", "motiv": "Motiv Modelləri"
         };
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+        let cachedData = localStorage.getItem("catalog_data");
+        if (cachedData) processCatalog(JSON.parse(cachedData));
 
-    function goBackToCatalog() {
-        window.history.pushState({}, "", window.location.pathname);
-        document.getElementById('product-detail-view').style.display = 'none';
-        document.getElementById('catalog-container').style.display = 'block';
-        document.getElementById('main-header').style.display = 'block';
-    }
+        fetch(webappUrl)
+            .then(response => response.json())
+            .then(rows => {
+                localStorage.setItem("catalog_data", JSON.stringify(rows));
+                processCatalog(rows);
+            })
+            .catch(error => {
+                console.error(error);
+                if (!cachedData) document.getElementById('catalog-container').innerHTML = '<p style="text-align: center; color: #ff5252;">Məlumatları yükləmək mümkün olmadı.</p>';
+            });
 
-    // URL-i yoxlayaraq səhifə yenilənəndə məhsul səhifəsini bərpa etmək
-    function checkUrlForProduct() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let prodId = urlParams.get('product');
-        if (prodId !== null) {
-            let product = globalProductsList.find(p => p.id === parseInt(prodId));
-            if (product) {
-                showProductView(product);
+        function processCatalog(rows) {
+            const productRows = rows.slice(1);
+            let activeSectionsData = {};
+            let globalIndex = 0;
+            globalProductsList = [];
+
+            productRows.forEach(row => {
+                if (row.length >= 6) {
+                    let catText = String(row[0] || "").trim().toLowerCase();
+                    let title   = String(row[1] || "").trim();
+                    let price   = String(row[2] || "").trim();
+                    let size    = String(row[3] || "").trim();
+                    let imageRaw = String(row[4] || "").trim();
+                    let code    = String(row[5] || "").trim();
+                    let desc    = String(row[6] || "").trim();
+
+                    // Vergüllə ayrılmış şəkilləri massivə çeviririk
+                    let images = imageRaw.split(',').map(img => img.trim()).filter(img => img !== "");
+                    
+                    let key = "";
+                    if (catText.includes("green") || catText.includes("yaşıl") || catText.includes("зелень") || catText.includes("ot")) key = "green";
+                    else if (catText.includes("cita") || catText.includes("çita") || catText.includes("рейка")) key = "cita";
+                    else if (catText.includes("laminat") || catText.includes("ламинат")) key = "laminat";
+                    else if (catText.includes("qaya") || catText.includes("daş") || catText.includes("скала")) key = "qaya";
+                    else if (catText.includes("guzgu") || catText.includes("зеркало")) key = "guzgu";
+                    else if (catText.includes("bambuk") || catText.includes("бамбук")) key = "bambuk";
+                    else if (catText.includes("mdf daraq") || catText.includes("mdf")) key = "mdf_daraq";
+                    else if (catText.includes("akustik daraq")) key = "akustik_daraq";
+                    else if (catText.includes("akustik panel") || catText.includes("akustik")) key = "akustik_paneller";
+                    else if (catText.includes("kamin") || catText.includes("somine") || catText.includes("şöminə")) key = "kamin";
+                    else if (catText.includes("pvc daraq")) key = "pvc_daraq";
+                    else if (catText.includes("yapisdirici") || catText.includes("yapışqan")) key = "yapisdiricilar";
+                    else if (catText.includes("aksesuar")) key = "aksesuarlar";
+                    else if (catText.includes("mermer") || catText.includes("mərmər")) key = "mermer";
+                    else if (catText.includes("ozu yapisan") || catText.includes("özü yapışan")) key = "ozu_yapisan";
+                    else if (catText.includes("motiv")) key = "motiv";
+
+                    if (key && images.length > 0) {
+                        let productObj = { 
+                            id: globalIndex++, 
+                            title, price, size, 
+                            images, // Massiv saxlayırıq
+                            code, desc 
+                        };
+                        globalProductsList.push(productObj);
+
+                        if (!activeSectionsData[key]) {
+                            activeSectionsData[key] = { name: sectionNames[key], items: [] };
+                        }
+                        activeSectionsData[key].items.push(productObj);
+                    }
+                }
+            });
+
+            renderNavigationAndCatalog(activeSectionsData);
+            checkUrlForProduct();
+        }
+
+        function renderNavigationAndCatalog(activeSectionsData) {
+            let navMenu = document.getElementById('nav-menu');
+            let container = document.getElementById('catalog-container');
+            
+            navMenu.innerHTML = `<a href="#home">Ana Səhifə</a>`;
+            container.innerHTML = "";
+
+            for (let key in activeSectionsData) {
+                let sec = activeSectionsData[key];
+                if (sec.items.length > 0) {
+                    navMenu.innerHTML += `<a href="#${key}" onclick="goBackToCatalog()">${sec.name}</a>`;
+
+                    let isBambuk = (key === "bambuk");
+                    let sectionHtml = `<h2 id="${key}" class="section-title">${sec.name}</h2><div class="grid">`;
+                    
+                    sec.items.forEach(item => {
+                        let hasMultipleImages = item.images.length > 1;
+                        
+                        // Kampaniya (Endirim) şərti
+                        let isDiscount = item.desc && (item.desc.includes('...') || item.desc.includes('…'));
+                        
+                        let cardClass = isDiscount ? "card discount-card" : "card";
+                        let priceClass = isDiscount ? "price-badge discount-price" : "price-badge";
+
+                        // Slayd oxları və nöqtələri
+                        let sliderControls = "";
+                        if (hasMultipleImages) {
+                            sliderControls += `
+                                <div class="slider-btn slider-btn-prev" onclick="event.stopPropagation(); changeCardSlide(${item.id}, -1)">&#10094;</div>
+                                <div class="slider-btn slider-btn-next" onclick="event.stopPropagation(); changeCardSlide(${item.id}, 1)">&#10095;</div>
+                                <div class="slider-dots" id="dots_${item.id}">
+                            `;
+                            for(let i=0; i<item.images.length; i++){
+                                sliderControls += `<div class="slider-dot ${i===0 ? 'active' : ''}"></div>`;
+                            }
+                            sliderControls += `</div>`;
+                        }
+
+                        sectionHtml += `
+                            <div class="${cardClass}" onclick="openProductPage(${item.id})">
+                                <div class="card-img-container ${isBambuk ? 'large-img-container' : ''}">
+                                    <img id="img_${item.id}" src="${item.images[0]}" data-index="0" alt="${item.title}" loading="lazy">
+                                    ${sliderControls}
+                                    ${item.code ? `<div class="card-badge">Kod: ${item.code}</div>` : ''}
+                                    ${item.price ? `<div class="${priceClass}">${item.price}</div>` : ''}
+                                </div>
+                                <div class="card-content">
+                                    <div>
+                                        <h3 class="card-title">${item.title}</h3>
+                                        ${item.size ? `<div class="info-group"><div class="info-label">Ölçü</div><div class="info-value">${item.size}</div></div>` : ''}
+                                        ${item.desc ? `<div class="info-group"><div class="info-label">Açıqlama</div><div class="info-value">${item.desc}</div></div>` : ''}
+                                    </div>
+                                    <div class="card-actions">
+                                        <div class="quantity-control" onclick="event.stopPropagation()">
+                                            <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                                            <span id="qty_val_${item.id}" class="qty-display">1</span>
+                                            <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCartDirect(${item.id})">Səbətə at</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    sectionHtml += `</div>`;
+                    container.innerHTML += sectionHtml;
+                }
             }
         }
-    }
 
-    window.onpopstate = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let prodId = urlParams.get('product');
-        if (prodId === null) {
+        // Kart üzərində slayd çevirmə funksiyası
+        function changeCardSlide(id, direction) {
+            let product = globalProductsList.find(p => p.id === id);
+            if (!product || product.images.length <= 1) return;
+
+            let imgElement = document.getElementById(`img_${id}`);
+            let currentIndex = parseInt(imgElement.getAttribute('data-index'));
+            let newIndex = currentIndex + direction;
+
+            if (newIndex >= product.images.length) newIndex = 0;
+            if (newIndex < 0) newIndex = product.images.length - 1;
+
+            imgElement.style.opacity = 0;
+            setTimeout(() => {
+                imgElement.src = product.images[newIndex];
+                imgElement.setAttribute('data-index', newIndex);
+                imgElement.style.opacity = 1;
+
+                // Nöqtələri yeniləyirik
+                let dotsContainer = document.getElementById(`dots_${id}`);
+                if (dotsContainer) {
+                    let dots = dotsContainer.getElementsByClassName('slider-dot');
+                    for(let i=0; i<dots.length; i++) {
+                        dots[i].classList.remove('active');
+                    }
+                    dots[newIndex].classList.add('active');
+                }
+            }, 150);
+        }
+
+        function changeQty(id, delta) {
+            let display = document.getElementById(`qty_val_${id}`);
+            if (!display) return;
+            let currentVal = parseInt(display.innerText) || 1;
+            let newVal = currentVal + delta;
+            if (newVal < 1) newVal = 1;
+            display.innerText = newVal;
+        }
+
+        function changeDetailQty(delta) {
+            let display = document.getElementById('detail_qty_val');
+            if (!display) return;
+            let currentVal = parseInt(display.innerText) || 1;
+            let newVal = currentVal + delta;
+            if (newVal < 1) newVal = 1;
+            display.innerText = newVal;
+        }
+
+        let currentDetailProduct = null;
+        let currentDetailImageIndex = 0;
+
+        // Məhsul səhifəsini açmaq
+        function openProductPage(id) {
+            let product = globalProductsList.find(p => p.id === id);
+            if (!product) return;
+
+            window.history.pushState({ productId: id }, "", `?product=${id}`);
+            showProductView(product);
+        }
+
+        function showProductView(product) {
+            currentDetailProduct = product;
+            currentDetailImageIndex = 0;
+
+            document.getElementById('catalog-container').style.display = 'none';
+            document.getElementById('main-header').style.display = 'none';
+            
+            let detailView = document.getElementById('product-detail-view');
+            detailView.style.display = 'flex';
+
+            // Kampaniya/Endirim yoxlanışı (detal səhifəsi üçün)
+            let isDiscount = product.desc && (product.desc.includes('...') || product.desc.includes('…'));
+            let priceElem = document.getElementById('detailPrice');
+
+            if (isDiscount) {
+                detailView.classList.add('discount-card');
+                priceElem.classList.add('discount-price-text');
+            } else {
+                detailView.classList.remove('discount-card');
+                priceElem.classList.remove('discount-price-text');
+            }
+
+            document.getElementById('detailImg').src = product.images[0];
+            document.getElementById('detailTitle').innerText = product.title;
+            document.getElementById('detail_qty_val').innerText = document.getElementById(`qty_val_${product.id}`) ? document.getElementById(`qty_val_${product.id}`).innerText : '1';
+
+            // Detal səhifəsində Slayd Oxları
+            let imgWrapper = document.querySelector('.detail-img-wrapper');
+            let existingControls = imgWrapper.querySelectorAll('.slider-btn, .slider-dots');
+            existingControls.forEach(el => el.remove());
+
+            if (product.images.length > 1) {
+                let prevBtn = document.createElement('div');
+                prevBtn.className = 'slider-btn slider-btn-prev';
+                prevBtn.innerHTML = '&#10094;';
+                prevBtn.onclick = function(e) { e.stopPropagation(); changeDetailSlide(-1); };
+
+                let nextBtn = document.createElement('div');
+                nextBtn.className = 'slider-btn slider-btn-next';
+                nextBtn.innerHTML = '&#10095;';
+                nextBtn.onclick = function(e) { e.stopPropagation(); changeDetailSlide(1); };
+
+                let dotsContainer = document.createElement('div');
+                dotsContainer.className = 'slider-dots';
+                dotsContainer.id = 'detail_dots';
+                for(let i=0; i<product.images.length; i++){
+                    let dot = document.createElement('div');
+                    dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+                    dotsContainer.appendChild(dot);
+                }
+
+                imgWrapper.appendChild(prevBtn);
+                imgWrapper.appendChild(nextBtn);
+                imgWrapper.appendChild(dotsContainer);
+            }
+
+            let codeBox = document.getElementById('detailCodeBox');
+            if (product.code) {
+                document.getElementById('detailCode').innerText = product.code;
+                codeBox.style.display = 'block';
+            } else { codeBox.style.display = 'none'; }
+
+            let sizeBox = document.getElementById('detailSizeBox');
+            if (product.size) {
+                document.getElementById('detailSize').innerText = product.size;
+                sizeBox.style.display = 'block';
+            } else { sizeBox.style.display = 'none'; }
+
+            let descBox = document.getElementById('detailDescBox');
+            if (product.desc) {
+                document.getElementById('detailDesc').innerText = product.desc;
+                descBox.style.display = 'block';
+            } else { descBox.style.display = 'none'; }
+
+            priceElem.innerText = product.price ? product.price : 'Razılaşma ilə';
+
+            let addBtn = document.getElementById('detailAddToCartBtn');
+            addBtn.onclick = function() {
+                let qty = parseInt(document.getElementById('detail_qty_val').innerText) || 1;
+                let cardDisplay = document.getElementById(`qty_val_${product.id}`);
+                if (cardDisplay) cardDisplay.innerText = qty;
+
+                addToCart(product.title, product.code, product.price, qty);
+            };
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Detal səhifəsində slayd çevirmə funksiyası
+        function changeDetailSlide(direction) {
+            if (!currentDetailProduct || currentDetailProduct.images.length <= 1) return;
+
+            currentDetailImageIndex += direction;
+
+            if (currentDetailImageIndex >= currentDetailProduct.images.length) currentDetailImageIndex = 0;
+            if (currentDetailImageIndex < 0) currentDetailImageIndex = currentDetailProduct.images.length - 1;
+
+            let imgElement = document.getElementById('detailImg');
+            imgElement.style.opacity = 0;
+            
+            setTimeout(() => {
+                imgElement.src = currentDetailProduct.images[currentDetailImageIndex];
+                imgElement.style.opacity = 1;
+
+                let dotsContainer = document.getElementById('detail_dots');
+                if (dotsContainer) {
+                    let dots = dotsContainer.getElementsByClassName('slider-dot');
+                    for(let i=0; i<dots.length; i++) {
+                        dots[i].classList.remove('active');
+                    }
+                    dots[currentDetailImageIndex].classList.add('active');
+                }
+            }, 150);
+        }
+
+        function goBackToCatalog() {
+            window.history.pushState({}, "", window.location.pathname);
             document.getElementById('product-detail-view').style.display = 'none';
             document.getElementById('catalog-container').style.display = 'block';
             document.getElementById('main-header').style.display = 'block';
-        } else {
-            let product = globalProductsList.find(p => p.id === parseInt(prodId));
-            if (product) showProductView(product);
-        }
-    };
-
-    function addToCartDirect(id) {
-        let product = globalProductsList.find(p => p.id === id);
-        if (!product) return;
-        let display = document.getElementById(`qty_val_${id}`);
-        let quantity = display ? (parseInt(display.innerText) || 1) : 1;
-        addToCart(product.title, product.code, product.price, quantity);
-    }
-
-    function addToCart(title, code, price, quantity) {
-        let existingItem = cart.find(i => i.title === title && i.code === code);
-        if (existingItem) {
-            existingItem.quantity += quantity;
-        } else {
-            cart.push({ title, code, price, quantity });
         }
 
-        updateCartUI();
-        showToast();
-        
-        const btn = document.querySelector('.fixed-bottom-cart');
-        btn.style.transform = "translateX(-50%) scale(1.08)";
-        setTimeout(() => btn.style.transform = "translateX(-50%) scale(1)", 200);
-    }
-
-    function removeFromCart(index) {
-        cart.splice(index, 1);
-        updateCartUI();
-    }
-
-    function updateCartUI() {
-        let cartCount = document.getElementById('cart-count');
-        let cartItemsList = document.getElementById('cartItemsList');
-        let cartTotalPrice = document.getElementById('cartTotalPrice');
-
-        let totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCount.innerText = totalCount;
-
-        if (cart.length === 0) {
-            cartItemsList.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Səbətiniz boşdur.</p>';
-            cartTotalPrice.innerText = '0 AZN';
-            return;
+        function checkUrlForProduct() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let prodId = urlParams.get('product');
+            if (prodId !== null) {
+                let product = globalProductsList.find(p => p.id === parseInt(prodId));
+                if (product) {
+                    showProductView(product);
+                }
+            }
         }
 
-        let listHtml = '';
-        let grandTotal = 0;
+        window.onpopstate = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let prodId = urlParams.get('product');
+            if (prodId === null) {
+                document.getElementById('product-detail-view').style.display = 'none';
+                document.getElementById('catalog-container').style.display = 'block';
+                document.getElementById('main-header').style.display = 'block';
+            } else {
+                let product = globalProductsList.find(p => p.id === parseInt(prodId));
+                if (product) showProductView(product);
+            }
+        };
 
-        cart.forEach((item, index) => {
-            let numericPrice = parseFloat(item.price) || 0;
-            let itemTotal = numericPrice * item.quantity;
-            grandTotal += itemTotal;
+        function addToCartDirect(id) {
+            let product = globalProductsList.find(p => p.id === id);
+            if (!product) return;
+            let display = document.getElementById(`qty_val_${id}`);
+            let quantity = display ? (parseInt(display.innerText) || 1) : 1;
+            addToCart(product.title, product.code, product.price, quantity);
+        }
 
-            listHtml += `
-                <div class="cart-item-row">
-                    <div class="cart-item-info">
-                        <span class="cart-item-title">${item.title} ${item.code ? '(' + item.code + ')' : ''}</span>
-                        <span class="cart-item-details">Say: ${item.quantity} | Qiymət: ${item.price || 'Razılaşma'}</span>
+        function addToCart(title, code, price, quantity) {
+            let existingItem = cart.find(i => i.title === title && i.code === code);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ title, code, price, quantity });
+            }
+
+            updateCartUI();
+            showToast();
+            
+            const btn = document.querySelector('.fixed-bottom-cart');
+            btn.style.transform = "translateX(-50%) scale(1.08)";
+            setTimeout(() => btn.style.transform = "translateX(-50%) scale(1)", 200);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            let cartCount = document.getElementById('cart-count');
+            let cartItemsList = document.getElementById('cartItemsList');
+            let cartTotalPrice = document.getElementById('cartTotalPrice');
+
+            let totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.innerText = totalCount;
+
+            if (cart.length === 0) {
+                cartItemsList.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Səbətiniz boşdur.</p>';
+                cartTotalPrice.innerText = '0 AZN';
+                return;
+            }
+
+            let listHtml = '';
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                let numericPrice = parseFloat(item.price) || 0;
+                let itemTotal = numericPrice * item.quantity;
+                grandTotal += itemTotal;
+
+                listHtml += `
+                    <div class="cart-item-row">
+                        <div class="cart-item-info">
+                            <span class="cart-item-title">${item.title} ${item.code ? '(' + item.code + ')' : ''}</span>
+                            <span class="cart-item-details">Say: ${item.quantity} | Qiymət: ${item.price || 'Razılaşma'}</span>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${index})">Sil</button>
                     </div>
-                    <button class="remove-item" onclick="removeFromCart(${index})">Sil</button>
-                </div>
-            `;
-        });
+                `;
+            });
 
-        cartItemsList.innerHTML = listHtml;
-        cartTotalPrice.innerText = grandTotal > 0 ? grandTotal + ' AZN' : 'Razılaşma ilə';
-    }
-
-    function showToast() {
-        let toast = document.getElementById('toastNotification');
-        toast.classList.add('show');
-        setTimeout(() => { toast.classList.remove('show'); }, 1500);
-    }
-
-    function toggleCartModal() {
-        let modal = document.getElementById('cartModal');
-        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    function openLightbox(imgSrc) {
-        let modal = document.getElementById('lightboxModal');
-        let img = document.getElementById('lightboxImg');
-        img.src = imgSrc;
-        modal.style.display = 'flex';
-    }
-
-    function closeLightbox() {
-        document.getElementById('lightboxModal').style.display = 'none';
-    }
-
-    function checkoutWhatsApp() {
-        if (cart.length === 0) {
-            alert("Səbətiniz boşdur!");
-            return;
+            cartItemsList.innerHTML = listHtml;
+            cartTotalPrice.innerText = grandTotal > 0 ? grandTotal + ' AZN' : 'Razılaşma ilə';
         }
 
-        let name = document.getElementById('custName').value.trim();
-        let phone = document.getElementById('custPhone').value.trim();
-        let address = document.getElementById('custAddress').value.trim();
-
-        let phoneNumber = "994702283682";
-        let message = `*Yeni Sifariş - DİVARPANEL*\n\n`;
-        
-        if (name || phone || address) {
-            if (name) message += `👤 *Müştəri:* ${name}\n`;
-            if (phone) message += `📞 *Əlaqə:* ${phone}\n`;
-            if (address) message += `📍 *Ünvan:* ${address}\n\n`;
+        function showToast() {
+            let toast = document.getElementById('toastNotification');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 1500);
         }
 
-        message += `📦 *Sifariş Edilən Məhsullar:*\n`;
-        let grandTotal = 0;
+        function toggleCartModal() {
+            let modal = document.getElementById('cartModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
 
-        cart.forEach((item, index) => {
-            let numericPrice = parseFloat(item.price) || 0;
-            let itemTotal = numericPrice * item.quantity;
-            grandTotal += itemTotal;
+        function openLightbox(imgSrc) {
+            let modal = document.getElementById('lightboxModal');
+            let img = document.getElementById('lightboxImg');
+            img.src = imgSrc;
+            modal.style.display = 'flex';
+        }
 
-            message += `${index + 1}. *${item.title}* ${item.code ? '[Kod: ' + item.code + ']' : ''}\n`;
-            message += `   - Say: ${item.quantity} ədəd\n`;
-            message += `   - Qiymət: ${item.price ? item.price : 'Razılaşma ilə'}\n\n`;
-        });
+        function closeLightbox() {
+            document.getElementById('lightboxModal').style.display = 'none';
+        }
 
-        message += `💰 *Ümumi Məbləğ:* ${grandTotal > 0 ? grandTotal + ' AZN' : 'Razılaşma ilə'}\n`;
-        message += `ℹ️ *Qeyd:* Çatdırılma və quraşdırılma əlavə xidmətdir.`;
+        function checkoutWhatsApp() {
+            if (cart.length === 0) {
+                alert("Səbətiniz boşdur!");
+                return;
+            }
 
-        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
-    }
-</script>
+            let name = document.getElementById('custName').value.trim();
+            let phone = document.getElementById('custPhone').value.trim();
+            let address = document.getElementById('custAddress').value.trim();
+
+            let phoneNumber = "994702283682";
+            let message = `*Yeni Sifariş - DİVARPANEL*\n\n`;
+            
+            if (name || phone || address) {
+                if (name) message += `👤 *Müştəri:* ${name}\n`;
+                if (phone) message += `📞 *Əlaqə:* ${phone}\n`;
+                if (address) message += `📍 *Ünvan:* ${address}\n\n`;
+            }
+
+            message += `📦 *Sifariş Edilən Məhsullar:*\n`;
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                let numericPrice = parseFloat(item.price) || 0;
+                let itemTotal = numericPrice * item.quantity;
+                grandTotal += itemTotal;
+
+                message += `${index + 1}. *${item.title}* ${item.code ? '[Kod: ' + item.code + ']' : ''}\n`;
+                message += `   - Say: ${item.quantity} ədəd\n`;
+                message += `   - Qiymət: ${item.price ? item.price : 'Razılaşma ilə'}\n\n`;
+            });
+
+            message += `💰 *Ümumi Məbləğ:* ${grandTotal > 0 ? grandTotal + ' AZN' : 'Razılaşma ilə'}\n`;
+            message += `ℹ️ *Qeyd:* Çatdırılma və quraşdırılma əlavə xidmətdir.`;
+
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
+        }
+    </script>
 </body>
 </html>
