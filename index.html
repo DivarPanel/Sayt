@@ -26,7 +26,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            padding-bottom: 85px;
+            padding-bottom: 100px;
         }
 
         /* Naviqasiya Menyu */
@@ -146,10 +146,14 @@
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            transition: border-color 0.2s ease;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
         }
 
-        .card:hover { border-color: rgba(255, 119, 0, 0.4); }
+        .card:hover { 
+            border-color: rgba(255, 119, 0, 0.4); 
+            transform: translateY(-2px);
+        }
 
         .card-img-container {
             width: 100%;
@@ -157,7 +161,6 @@
             overflow: hidden;
             position: relative;
             background-color: #080808;
-            cursor: pointer;
         }
 
         @media (min-width: 768px) {
@@ -252,7 +255,7 @@
             .info-label { font-size: 0.7rem; }
             .info-value { font-size: 0.85rem; }
         }
-
+        
         .card-actions {
             display: flex;
             flex-direction: column;
@@ -520,6 +523,45 @@
         🛒 Səbətə Bax (<span id="cart-count">0</span>)
     </button>
 
+    <!-- Məhsul Detal Modalı -->
+    <div class="modal-overlay" id="productDetailModal" onclick="closeProductModal()">
+        <div class="modal" onclick="event.stopPropagation()" style="overflow-y: auto;">
+            <div class="modal-header">
+                <h2 id="modalProdTitle">Məhsul Adı</h2>
+                <button class="close-modal" onclick="closeProductModal()">&times;</button>
+            </div>
+            <div style="text-align: center; margin-bottom: 12px; background: #000; border-radius: 8px; padding: 5px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openLightbox(document.getElementById('modalProdImg').src)">
+                <img id="modalProdImg" src="" alt="Məhsul şəkli" style="max-height: 220px; width: auto; max-width: 100%; object-fit: contain; border-radius: 6px;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                <div id="modalProdCodeContainer" class="info-group">
+                    <div class="info-label">Kod</div>
+                    <div id="modalProdCode" class="info-value"></div>
+                </div>
+                <div id="modalProdSizeContainer" class="info-group">
+                    <div class="info-label">Ölçü</div>
+                    <div id="modalProdSize" class="info-value"></div>
+                </div>
+                <div id="modalProdDescContainer" class="info-group">
+                    <div class="info-label">Açıqlama</div>
+                    <div id="modalProdDesc" class="info-value"></div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Qiymət</div>
+                    <div id="modalProdPrice" class="info-value" style="color: var(--accent-color); font-weight: 700; font-size: 1rem;"></div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <div class="quantity-control" style="width: 110px;">
+                    <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+                    <span id="modal_qty_val" class="qty-display">1</span>
+                    <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+                </div>
+                <button class="add-to-cart-btn" id="modalAddToCartBtn" style="padding: 10px; font-size: 0.9rem; flex-grow: 1;">Səbətə at</button>
+            </div>
+        </div>
+    </div>
+
     <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
         <div class="lightbox-content" onclick="event.stopPropagation()">
             <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
@@ -572,6 +614,7 @@
     <script>
         const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
         let cart = [];
+        let currentModalProductId = null;
 
         // --- Ziyarətçi Sayğacı və Google Cədvəl Sinxronizasiyası ---
         function trackVisitor() {
@@ -584,7 +627,6 @@
             let todayStr = new Date().toISOString().split('T')[0];
             let lastVisitDate = localStorage.getItem("dp_last_visit_date");
 
-            // Əgər qurğu bu gün ilk dəfə daxil olursa, Google Apps Script-ə 'no-cors' rejimi ilə göndəririk
             if (lastVisitDate !== todayStr) {
                 localStorage.setItem("dp_last_visit_date", todayStr);
                 
@@ -596,7 +638,6 @@
                 }).catch(err => console.log("Statistika göndərilmədi:", err));
             }
 
-            // Brauzer yaddaşında bugünkü unikal ziyarətçi sayını yeniləyirik
             let visitCounterData = JSON.parse(localStorage.getItem("dp_visitor_stats") || "{}");
             if (visitCounterData.date !== todayStr) {
                 visitCounterData = { date: todayStr, devices: [deviceId] };
@@ -691,9 +732,15 @@
                     
                     sec.items.forEach(item => {
                         let safeImg = item.image.replace(/'/g, "\\'");
+                        let safeTitle = item.title.replace(/'/g, "\\'");
+                        let safeDesc = (item.desc || "").replace(/'/g, "\\'");
+                        let safeSize = (item.size || "").replace(/'/g, "\\'");
+                        let safeCode = (item.code || "").replace(/'/g, "\\'");
+                        let safePrice = (item.price || "").replace(/'/g, "\\'");
+
                         sectionHtml += `
-                            <div class="card">
-                                <div class="card-img-container ${isBambuk ? 'large-img-container' : ''}" onclick="openLightbox('${safeImg}')" title="Şəkilə baxmaq üçün klikləyin">
+                            <div class="card" onclick="openProductModal('${safeTitle}', '${safeCode}', '${safePrice}', '${safeSize}', '${safeDesc}', '${safeImg}', ${item.id})">
+                                <div class="card-img-container ${isBambuk ? 'large-img-container' : ''}">
                                     <img src="${item.image}" alt="${item.title}" loading="lazy">
                                     ${item.code ? `<div class="card-badge">Kod: ${item.code}</div>` : ''}
                                     ${item.price ? `<div class="price-badge">${item.price}</div>` : ''}
@@ -710,7 +757,7 @@
                                             <span id="qty_val_${item.id}" class="qty-display">1</span>
                                             <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
                                         </div>
-                                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${item.title.replace(/'/g, "\\'")}', '${item.code}', '${item.price}', ${item.id})">Səbətə at</button>
+                                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${safeTitle}', '${safeCode}', '${safePrice}', ${item.id})">Səbətə at</button>
                                     </div>
                                 </div>
                             </div>
@@ -729,6 +776,65 @@
             let newVal = currentVal + delta;
             if (newVal < 1) newVal = 1;
             display.innerText = newVal;
+        }
+
+        function changeModalQty(delta) {
+            let display = document.getElementById('modal_qty_val');
+            if (!display) return;
+            let currentVal = parseInt(display.innerText) || 1;
+            let newVal = currentVal + delta;
+            if (newVal < 1) newVal = 1;
+            display.innerText = newVal;
+        }
+
+        function openProductModal(title, code, price, size, desc, image, id) {
+            currentModalProductId = id;
+            document.getElementById('modalProdTitle').innerText = title;
+            document.getElementById('modalProdImg').src = image;
+            document.getElementById('modal_qty_val').innerText = document.getElementById(`qty_val_${id}`) ? document.getElementById(`qty_val_${id}`).innerText : '1';
+            
+            let codeElem = document.getElementById('modalProdCodeContainer');
+            if (code) {
+                document.getElementById('modalProdCode').innerText = code;
+                codeElem.style.display = 'block';
+            } else {
+                codeElem.style.display = 'none';
+            }
+
+            let sizeElem = document.getElementById('modalProdSizeContainer');
+            if (size) {
+                document.getElementById('modalProdSize').innerText = size;
+                sizeElem.style.display = 'block';
+            } else {
+                sizeElem.style.display = 'none';
+            }
+
+            let descElem = document.getElementById('modalProdDescContainer');
+            if (desc) {
+                document.getElementById('modalProdDesc').innerText = desc;
+                descElem.style.display = 'block';
+            } else {
+                descElem.style.display = 'none';
+            }
+
+            document.getElementById('modalProdPrice').innerText = price ? price : 'Razılaşma ilə';
+
+            let addBtn = document.getElementById('modalAddToCartBtn');
+            addBtn.onclick = function() {
+                let modalQty = parseInt(document.getElementById('modal_qty_val').innerText) || 1;
+                // Kartdakı dəyəri də uyğunlaşdırırıq
+                let cardDisplay = document.getElementById(`qty_val_${id}`);
+                if(cardDisplay) cardDisplay.innerText = modalQty;
+                
+                addToCart(title, code, price, id);
+                closeProductModal();
+            };
+
+            document.getElementById('productDetailModal').style.display = 'flex';
+        }
+
+        function closeProductModal() {
+            document.getElementById('productDetailModal').style.display = 'none';
         }
 
         function openLightbox(imgSrc) {
@@ -847,6 +953,7 @@
 
                 message += `${index + 1}. *${item.title}* ${item.code ? '[Kod: ' + item.code + ']' : ''}\n`;
                 message += `   - Say: ${item.quantity} ədəd\n`;
+                message.trim();
                 message += `   - Qiymət: ${item.price ? item.price : 'Razılaşma ilə'}\n\n`;
             });
 
