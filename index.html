@@ -765,10 +765,12 @@
     </footer>
 
     <script>
-        const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
+    const webappUrl = "https://script.google.com/macros/s/AKfycbwby0c025UGFx5ndgYUB3wF1Eydr11hS8YfCYQ1akgsvmdp3jWNCNjTn0apJeYsKl9U1w/exec";
         let cart = [];
         let globalProductsList = [];
-
+        let currentDetailProduct = null;      // Bura əlavə edildi
+        let currentDetailImageIndex = 0;    // Bura əlavə edildi
+        
         function trackVisitor() {
             let deviceId = localStorage.getItem("dp_device_id");
             if (!deviceId) {
@@ -1001,8 +1003,7 @@
             display.innerText = newVal;
         }
 
-        let currentDetailProduct = null;
-        let currentDetailImageIndex = 0;
+      
 
         // Məhsul səhifəsini açmaq
         function openProductPage(id) {
