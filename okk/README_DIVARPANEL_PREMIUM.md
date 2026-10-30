@@ -30,3 +30,8 @@ Qeyd: Bu yenilənmə Firebase-də yeni `settings` kolleksiyasından istifadə ed
 - Admin həmin məhsulu yoxlayıb `Yoxladım — göstər` düyməsi ilə əsas kataloqa əlavə edə bilər.
 - `Gizli saxla` seçilərsə məhsul Firestore-da arxiv kimi qalır, əsas səhifədə görünmür və növbəti sinxronizasiyada avtomatik aktivləşmir.
 - Shopify sinxronizasiyası GitHub Actions tərəfindən `products.json` faylını yenilədikdən sonra Admin → `Shopify-dan məhsulları gətir` düyməsi ilə işlədilir. Mövcud məhsulların kateqoriya, qiymət və görünüş seçimləri qorunur.
+
+## Virtual Showroom (məhsulu divarda sına)
+Məhsul kartına klik etdikdə açılan detallı pəncərədə **“Divarda necə görünər? — Virtual Showroom”** düyməsi var. Buradan qonaq otağı, yataq otağı və ofis fonu seçmək, öz otağınızın şəklini yükləmək, məhsul teksturasının enini, şəffaflığını və mövqeyini dəyişmək mümkündür.
+
+Qeyd: Bu versiya brauzerdə işləyən ilkin vizual simulyasiyadır. Məhsul şəkli otaq şəklinin üzərinə tekstura kimi yerləşdirilir; avtomatik divar aşkarlanması, perspektiv uyğunlaşdırma və fotorealistik AI montajı daxil deyil. Daha real nəticə üçün növbəti mərhələdə divar sahəsinin nöqtələrlə seçilməsi və perspektiv deformasiya əlavə oluna bilər.
