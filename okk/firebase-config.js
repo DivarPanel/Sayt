@@ -11,3 +11,4 @@ export const firebaseConfig = {
 // Firebase Authentication-da yaradacağınız admin hesabının e-poçtu.
 export const ADMIN_EMAIL = "behram.krmv.99@gmail.com";
 export const WHATSAPP_NUMBER = "994552032271";
+\n// Firebase App Check reCAPTCHA Enterprise site key. Set this in Firebase Console before enabling AI calls.\nexport const appCheckSiteKey = 'ADD_RECAPTCHA_ENTERPRISE_SITE_KEY';\n

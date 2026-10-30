@@ -1,0 +1,46 @@
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js";
+let active = null;
+window.stopDivarPanelAR = () => { if (active?.session) active.session.end(); active = null; };
+window.startDivarPanelAR = async ({ imageUrl, stage, status }) => {
+  if (!window.isSecureContext) throw new Error("Real AR üçün sayt HTTPS üzərindən açılmalıdır.");
+  if (!navigator.xr) throw new Error("Bu brauzer WebXR AR dəstəkləmir. Android-də Chrome istifadə edin.");
+  const ok = await navigator.xr.isSessionSupported("immersive-ar");
+  if (!ok) throw new Error("Bu cihaz immersive AR dəstəkləmir. Uyğun Android/ARCore cihazı və Chrome tələb olunur.");
+  if (!imageUrl) throw new Error("Məhsulun tekstura şəkli mövcud deyil.");
+  if (active?.session) await active.session.end();
+  const hint = document.createElement("div");
+  hint.className = "ar-overlay-hint";
+  hint.textContent = "Divara kameranı yönəldin. Səth tapıldıqda ekrana toxunaraq paneli yerləşdirin.";
+  stage.appendChild(hint);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera();
+  const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+  renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%;z-index:4";
+  renderer.xr.enabled = true;
+  renderer.xr.setReferenceSpaceType("local");
+  stage.appendChild(renderer.domElement);
+  const light = new THREE.HemisphereLight(0xffffff,0x777777,2); scene.add(light);
+  const reticle = new THREE.Mesh(new THREE.RingGeometry(0.07,0.09,32),new THREE.MeshBasicMaterial({color:0xd6ad5c}));
+  reticle.rotation.x=-Math.PI/2; reticle.matrixAutoUpdate=false; reticle.visible=false; scene.add(reticle);
+  const texture = await new THREE.TextureLoader().loadAsync(imageUrl);
+  texture.colorSpace=THREE.SRGBColorSpace;
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.2),new THREE.MeshStandardMaterial({map:texture,side:THREE.DoubleSide}));
+  wall.visible=false; scene.add(wall);
+  const session=await navigator.xr.requestSession("immersive-ar",{requiredFeatures:["hit-test"],optionalFeatures:["dom-overlay"],domOverlay:{root:stage}});
+  await renderer.xr.setSession(session);
+  const refSpace=await session.requestReferenceSpace("local");
+  const viewer=await session.requestReferenceSpace("viewer");
+  const hitSource=await session.requestHitTestSource({space:viewer});
+  let placed=false, hitMatrix=null;
+  const onSelect=()=>{if(reticle.visible){wall.matrix.copy(reticle.matrix);wall.matrix.decompose(wall.position,wall.quaternion,wall.scale);wall.visible=true;placed=true;}};
+  session.addEventListener("select",onSelect);
+  renderer.setAnimationLoop((time,frame)=>{
+    if(frame&&!placed){const hits=frame.getHitTestResults(hitSource);if(hits.length){const pose=hits[0].getPose(refSpace);reticle.visible=true;reticle.matrix.fromArray(pose.transform.matrix);}else reticle.visible=false;}
+    renderer.render(scene,camera);
+  });
+  active={session,renderer,scene};
+  session.addEventListener("end",()=>{renderer.setAnimationLoop(null);renderer.dispose();texture.dispose();hitSource.cancel();renderer.domElement.remove();hint.remove();active=null;});
+  status.textContent="AR aktivdir. Divara yönəldin və ekrana toxunaraq paneli yerləşdirin.";
+};
