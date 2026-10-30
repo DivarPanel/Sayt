@@ -14,3 +14,4 @@ export const categoriesRef = collection(db, "categories");
 export const productDoc = id => doc(db, "products", String(id));
 export const categoryDoc = id => doc(db, "categories", String(id));
 export { collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch };
+export const settingsRef = doc(db, 'settings', 'catalog');
