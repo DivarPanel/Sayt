@@ -24,3 +24,7 @@ Bütün faylları repository-nin kök qovluğuna yükləyin. GitHub Pages-i `mai
 - Məhsul sənədləri: `title`, `code`, `price`, `size`, `categoryId`, `image`, `shortDescription`, `description`, `visible`, `sortOrder`, `source`, `shopifyId`, `productUrl`.
 - Ziyarətçilər oxuya bilər; yalnız təsdiqlənmiş `behram.krmv.99@gmail.com` hesabı yaza bilər.
 - Admin parolunu heç vaxt kod fayllarına yazmayın.
+
+
+## Düzəliş: məhsulların görünməməsi
+`catalog.js` və `admin.js` artıq `sortOrder` sahəsi olmayan Firestore sənədlərini də oxuyur. `products/test-product` kimi sənədlər kataloqda görünməlidir. `products` və `categories` kolleksiyaları üçün Firestore Rules yayımlanmalıdır. Shopify idxalı admin panelindən əl ilə başladılır; brauzer CORS məhdudiyyəti səbəbindən işləməyə bilər. GitHub Actions-dakı mövcud JSON yenilənməsi Firestore-a yazmır.
