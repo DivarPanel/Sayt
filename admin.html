@@ -19,6 +19,10 @@ button.danger{background:#7d3030;color:#fff}
 .small{color:#aab3bf}
 .item{border-color:#303b49}
 #productEditor{background:#121923;border-color:#c9a85e;box-shadow:0 25px 90px #000b}
+/* Always-visible product editor close control */
+#closeEditor{position:sticky!important;top:0!important;float:right!important;z-index:10050!important;display:none;box-shadow:0 4px 18px #0009;border:1px solid #c9a85e;padding:12px 16px!important;margin:0 0 8px 12px!important}
+#productEditor h2{display:inline-block;max-width:calc(100% - 170px);vertical-align:middle}
+@media(max-width:700px){#closeEditor{top:0!important;padding:10px 12px!important}#productEditor h2{max-width:calc(100% - 145px)}}
 #productEditor:before{background:#020407d9}
 #loginBox{max-width:540px;margin:6vh auto}
 #loginBox h2{color:#e4c47f}
