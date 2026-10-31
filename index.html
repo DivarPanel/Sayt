@@ -29,4 +29,82 @@ body{background:radial-gradient(ellipse at 50% -15%,#26303d 0,#10151d 42%,#080a0
 .ai-assist a{color:#f1d18a}
 
 .grid.layout-list{display:flex;flex-direction:column;gap:10px}.grid.layout-list .card{display:grid;grid-template-columns:190px 1fr}.grid.layout-list .photo{height:160px}.grid.layout-compact{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}.grid.layout-compact .photo{height:145px}.grid.layout-compact .info{padding:10px}.grid.layout-compact .info h3{font-size:13px}@media(max-width:700px){.grid.layout-list .card{grid-template-columns:110px 1fr}.grid.layout-list .photo{height:125px}}
-</style></head><body><header class="top"><div class="shell"><nav class="nav"><div><div class="brand" id="siteBrand">DIVAR<span>PANEL</span></div><div class="tagline">İNTERYER · EKSTERYER · DEKOR</div></div><a class="adminlink" href="./admin.html">Admin paneli ↗</a></nav><section class="hero"><div class="eyebrow" id="siteEyebrow">Məkanınıza yeni görünüş</div><h1 id="siteHeadline">Divarlarınıza xarakter<br>qatın.</h1><p id="siteIntro">Müasir dekorativ panellər, profillər və interyer həlləri. Məhsulları kateqoriyalar üzrə kəşf edin, bəyəndiklərinizi seçin və WhatsApp-la sifariş edin.</p></section></div></header><main class="shell wrap"><section id="featuredSection" hidden><div class="sectionhead"><div><h2>Seçilmiş məhsullar</h2><p>Xüsusi təkliflər və diqqətçəkən qiymətlər</p></div></div><div id="featuredGrid" class="featured"></div></section><div class="sectionhead"><div><h2 id="catalogTitle">Məhsul kataloqu</h2><p id="catalogSubtitle">Kateqoriya seçin və uyğun məhsulları tapın</p></div></div><div id="categoryPills" class="cats"></div><div class="tools"><input class="field" id="search" placeholder="Məhsul adı və ya kodu ilə axtar..."><select id="category"><option value="">Bütün kateqoriyalar</option></select><select id="sort"><option value="asc">Ad: A–Z</option><option value="priceUp">Qiymət: artan</option><option value="priceDown">Qiymət: azalan</option></select></div><div id="status" class="status">Məhsullar yüklənir...</div><section id="grid" class="grid"></section></main><footer class="foot"><div class="shell footrow"><b>DIVARPANEL</b><span id="footerText">İnteryer və eksteryer dekor həlləri · Sifariş üçün WhatsApp</span><span>© <span id="year"></span></span></div></footer><div class="modal" id="modal"><div class="dialog"><button class="close" id="close">✕</button><div id="detail"></div></div></div><script type="module" src="./catalog.js"></script></body></html>
+
+/* MOBILE OPTIMIZATION — compact premium layout */
+@media (max-width:700px){
+  html,body{width:100%;overflow-x:hidden}
+  .shell{padding-left:16px;padding-right:16px}
+  .nav{height:auto;min-height:68px;gap:12px;padding:12px 0;align-items:center}
+  .brand{font-size:clamp(19px,5.5vw,23px);line-height:1.12;letter-spacing:.075em}
+  .tagline{font-size:9px;line-height:1.45;letter-spacing:.12em;margin-top:5px;max-width:210px}
+  .adminlink{flex:0 0 auto;padding:10px 13px;font-size:12px;line-height:1.2;white-space:nowrap;border-radius:999px}
+  .hero{padding:28px 0 32px}
+  .eyebrow{font-size:10px;letter-spacing:.16em;line-height:1.5}
+  .hero h1{font-size:clamp(30px,8vw,38px);line-height:1.12;letter-spacing:-.045em;margin:12px 0 13px;max-width:100%}
+  .hero p{font-size:15px;line-height:1.6;max-width:100%;overflow-wrap:anywhere}
+  .wrap{padding-top:22px;padding-bottom:34px}
+  .sectionhead{margin:20px 0 12px;align-items:flex-start}
+  .sectionhead h2{font-size:21px;line-height:1.25}
+  .sectionhead p{font-size:12px;line-height:1.5}
+  .cats{gap:8px;padding:4px 0 12px;margin:0 -1px 4px;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  .cats::-webkit-scrollbar{display:none}
+  .catpill{padding:10px 14px;font-size:12px;min-height:40px}
+  .tools{grid-template-columns:minmax(0,1fr);gap:9px;margin:14px 0}
+  .field,select{min-height:50px;padding:13px 14px;font-size:14px;border-radius:13px}
+  .status{font-size:12px;margin:10px 0}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .photo{height:clamp(125px,38vw,165px)}
+  .card{border-radius:13px;min-width:0}
+  .info{padding:10px}
+  .info h3{font-size:12px;line-height:1.4;overflow-wrap:anywhere}
+  .price{font-size:15px}
+  .muted{font-size:11px;line-height:1.4}
+  .grid.layout-list .card{grid-template-columns:105px minmax(0,1fr)}
+  .grid.layout-list .photo{height:118px}
+  .grid.layout-compact{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid.layout-compact .photo{height:125px}
+  .foot{padding:18px 0}
+  .footrow{display:flex;flex-direction:column;align-items:flex-start;gap:8px;line-height:1.5}
+  .dialog{padding:18px 14px;margin:2vh auto;border-radius:16px}
+  .modal{padding:10px}
+  .ai-assist{padding:14px;margin:14px 0}
+  .ai-assist button{width:100%;line-height:1.4}
+}
+@media (max-width:380px){
+  .shell{padding-left:13px;padding-right:13px}
+  .nav{gap:8px}
+  .brand{font-size:18px}
+  .tagline{font-size:8px;letter-spacing:.09em}
+  .adminlink{font-size:11px;padding:9px 10px}
+  .hero h1{font-size:30px}
+  .hero p{font-size:14px}
+  .photo{height:120px}
+  .grid.layout-list .card{grid-template-columns:92px minmax(0,1fr)}
+}
+@media (min-width:701px) and (max-width:900px){
+  .shell{padding-left:20px;padding-right:20px}
+  .tools{grid-template-columns:minmax(180px,1fr) 200px 160px}
+  .hero{padding:48px 0 54px}
+}
+
+/* CINEMATIC BLACK GOLD LUXURY — product collage edition */
+:root{--gold:#c9a45d;--gold-hi:#f1d99a;--bg:#080a0e;--panel:#111720;--line:#34302a}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+.top{background:radial-gradient(ellipse at 82% 30%,#3b3020 0%,#1a1b1d 30%,#080a0e 72%);border-bottom:1px solid #c9a45d55}
+.top:after{display:none}
+.nav{height:88px;border-bottom:1px solid #d6b36a25}
+.navlinks{display:flex;align-items:center;gap:27px}.navlinks>a:not(.adminlink){color:#d9d0bd;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:color .25s}.navlinks>a:not(.adminlink):hover{color:var(--gold-hi)}
+.adminlink{padding:10px 17px;border-radius:4px;letter-spacing:.04em}
+.hero{min-height:520px;padding:58px 0 64px;display:grid;grid-template-columns:.85fr 1.15fr;align-items:center;gap:42px}
+.hero-copy{max-width:530px}.eyebrow{font-size:10px;letter-spacing:.27em;color:var(--gold);font-weight:800}.hero h1{font-size:clamp(42px,5.2vw,68px);line-height:1.02;letter-spacing:-.055em;margin:19px 0 18px;text-transform:uppercase}.hero h1 em{font-style:normal;color:var(--gold-hi)}.hero p{font-size:15px;line-height:1.85;color:#c0b9ad;max-width:470px}
+.hero-cta{display:inline-flex;align-items:center;gap:30px;margin-top:25px;padding:15px 20px;background:linear-gradient(120deg,#ead39a,#b18a46);color:#17130c;text-decoration:none;text-transform:uppercase;font-size:11px;font-weight:900;letter-spacing:.12em;border-radius:3px;box-shadow:0 10px 28px #0008;transition:transform .25s,box-shadow .25s}.hero-cta:hover{transform:translateY(-3px);box-shadow:0 14px 32px #c9a45d33}.hero-proof{display:flex;flex-wrap:wrap;gap:17px;margin-top:28px;color:#9f988b;font-size:10px;letter-spacing:.04em}
+.hero-collage{height:390px;position:relative;display:grid;grid-template-columns:1.25fr .75fr;grid-template-rows:1fr 1fr;gap:12px;perspective:900px}.collage-tile{position:relative;overflow:hidden;background:#171b20 center/cover no-repeat;border:1px solid #c9a45d45;box-shadow:0 18px 42px #0009;transition:transform .55s cubic-bezier(.2,.7,.2,1),border-color .35s}.collage-tile:hover{transform:translateY(-5px) scale(1.015);border-color:var(--gold-hi)}.tile-main{grid-row:1/3;background-image:linear-gradient(0deg,#080a0eb8,transparent 55%),url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1000&q=85')}.tile-main span{position:absolute;left:20px;bottom:20px;color:#f1d99a;font-size:10px;letter-spacing:.2em;font-weight:800}.tile-two{background-image:url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=700&q=85')}.tile-three{background-image:url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=700&q=85')}.collage-dots{position:absolute;right:12px;bottom:-22px;display:flex;gap:6px}.collage-dots i{width:5px;height:5px;border-radius:50%;background:#76694e}.collage-dots i.active{width:22px;border-radius:9px;background:var(--gold)}
+.wrap{padding-top:25px}.sectionhead{border-bottom:1px solid #c9a45d35;padding-bottom:13px}.sectionhead h2{font-size:22px;letter-spacing:.04em;text-transform:uppercase}.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.card{border-radius:4px;background:linear-gradient(150deg,#171c24,#0e1218);border:1px solid #34302a;transition:transform .4s cubic-bezier(.2,.7,.2,1),border-color .35s,box-shadow .35s}.card:hover{transform:translateY(-6px);border-color:var(--gold);box-shadow:0 18px 38px #000b,0 0 22px #c9a45d18}.photo{height:230px;background:#171b20}.photo img{transition:transform .65s cubic-bezier(.2,.7,.2,1)}.card:hover .photo img,.featurecard:hover .photo img{transform:scale(1.075)}.info{padding:15px}.info h3{font-size:13px;letter-spacing:.01em}.badge{border-radius:2px;background:#342a1b;color:#e6c77f}.price,.newprice{color:var(--gold-hi)}.catpill{border-radius:3px}.catpill.active{background:linear-gradient(120deg,#ead39a,#b18a46)}
+.featurecard{border-radius:4px;background:linear-gradient(150deg,#211d15,#11151b);border-color:#9c7a3c}.featurecard .photo{border-radius:2px}.foot{border-top:1px solid #c9a45d44}
+@keyframes heroFade{0%,100%{opacity:1}33%{opacity:.86}66%{opacity:.94}}
+.tile-two{animation:heroFade 8s ease-in-out infinite}.tile-three{animation:heroFade 8s ease-in-out 2.6s infinite}
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:30px;padding:44px 0 58px}.hero-copy{max-width:720px}.hero-collage{height:340px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.navlinks{gap:15px}}
+@media(max-width:700px){.nav{height:auto;min-height:72px;align-items:center}.navlinks{gap:7px}.navlinks>a:not(.adminlink){display:none}.adminlink{font-size:11px;padding:10px 12px}.hero{padding:34px 0 46px;gap:24px;min-height:0}.hero h1{font-size:clamp(35px,10vw,48px);margin:13px 0}.hero p{font-size:14px}.hero-proof{gap:10px;font-size:9px}.hero-collage{height:260px;gap:8px}.tile-main span{font-size:8px;left:12px;bottom:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.photo{height:clamp(135px,42vw,180px)}.sectionhead h2{font-size:18px}}
+@media(max-width:380px){.hero-collage{height:220px}.hero h1{font-size:34px}.brand{font-size:20px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style></head><body><header class="top"><div class="shell"><nav class="nav"><div><div class="brand" id="siteBrand">DIVAR<span>PANEL</span></div><div class="tagline">İNTERYER · EKSTERYER · DEKOR</div></div><div class="navlinks"><a href="#catalogTitle">Kataloq</a><a href="#featuredSection">Seçilmişlər</a><a href="#siteContact">Əlaqə</a><a class="adminlink" href="./admin.html">Admin ↗</a></div></nav><section class="hero"><div class="hero-copy"><div class="eyebrow" id="siteEyebrow">MÜASİR DİZAYN HƏLLƏRİ</div><h1 id="siteHeadline">Divarlarınızda<br><em>fərqi hiss edin.</em></h1><p id="siteIntro">Dekorativ panellər və memarlıq həlləri ilə məkanınıza xarakter qatın.</p><a class="hero-cta" href="#catalogTitle">Kataloqa bax <span>↗</span></a><div class="hero-proof"><span>✦ Keyfiyyətli materiallar</span><span>✦ İnteryer və eksteryer</span></div></div><div class="hero-collage" id="heroCollage" aria-label="Məhsul kolleksiyası"><div class="collage-tile tile-main"><span>DIVARPANEL COLLECTION</span></div><div class="collage-tile tile-two"></div><div class="collage-tile tile-three"></div><div class="collage-tile tile-four"></div><div class="collage-dots"><i class="active"></i><i></i><i></i></div></div></section></div></header><main class="shell wrap"><section id="featuredSection" hidden><div class="sectionhead"><div><h2>Seçilmiş məhsullar</h2><p>Xüsusi təkliflər və diqqətçəkən qiymətlər</p></div></div><div id="featuredGrid" class="featured"></div></section><div class="sectionhead"><div><h2 id="catalogTitle">Məhsul kataloqu</h2><p id="catalogSubtitle">Kateqoriya seçin və uyğun məhsulları tapın</p></div></div><div id="categoryPills" class="cats"></div><div class="tools"><input class="field" id="search" placeholder="Məhsul adı və ya kodu ilə axtar..."><select id="category"><option value="">Bütün kateqoriyalar</option></select><select id="sort"><option value="asc">Ad: A–Z</option><option value="priceUp">Qiymət: artan</option><option value="priceDown">Qiymət: azalan</option></select></div><div id="status" class="status">Məhsullar yüklənir...</div><section id="grid" class="grid"></section></main><footer class="foot"><div class="shell footrow"><b>DIVARPANEL</b><span id="footerText">İnteryer və eksteryer dekor həlləri · Sifariş üçün WhatsApp</span><span>© <span id="year"></span></span></div></footer><div class="modal" id="modal"><div class="dialog"><button class="close" id="close">✕</button><div id="detail"></div></div></div><script type="module" src="./catalog.js"></script></body></html>
