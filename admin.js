@@ -1,5 +1,5 @@
 import { ADMIN_EMAIL } from './firebase-config.js';
-import { auth, db, authState, login, logout, productsRef, categoriesRef, productDoc, categoryDoc, onSnapshot, addDoc, setDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, writeBatch, settingsRef, getDoc, getDocs } from './firebase.js';
+import { auth, db, authState, login, logout, productsRef, categoriesRef, productDoc, categoryDoc, onSnapshot, addDoc, setDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy, settingsRef, getDoc, getDocs } from './firebase.js';
 import { doc, collection } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 const $=id=>document.getElementById(id), app=$('app');const projectsRef=collection(db,'projects');let projectItems=[];let products=[],cats=[],displaySettings={showCode:true,showPrice:true,showSize:true};const msg=t=>$('msg').textContent=t;const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const slugify=s=>String(s||'').toLocaleLowerCase('az').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/ə/g,'e').replace(/ı/g,'i').replace(/ş/g,'sh').replace(/ç/g,'ch').replace(/ğ/g,'gh').replace(/ö/g,'o').replace(/ü/g,'u').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -7,7 +7,7 @@ const audit=async(action,summary)=>{try{await addDoc(collection(db,'activityLogs
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginMsg').textContent='Giriş yoxlanılır...';try{await login($('email').value.trim(),$('password').value);$('loginMsg').textContent='';}catch(err){$('loginMsg').textContent='Giriş alınmadı: '+err.message;}});
 authState(auth,user=>{if(user&&user.email?.toLowerCase()===ADMIN_EMAIL.toLowerCase()){ $('loginBox').style.display='none';app.style.display='block';$('who').textContent='  · '+user.email;subscribe();}else{app.style.display='none';$('loginBox').style.display='block';if(user)logout();}});
 $('logout').onclick=()=>logout();
-function subscribe(){onSnapshot(categoriesRef,s=>{cats=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.sortOrder??999999)-(b.sortOrder??999999));$('cats').innerHTML=cats.map((c,i)=>`<div class="item"><div class="grow"><b>${esc(c.name)}</b><div class="small">${c.visible===false?'Saytda gizlidir':'Saytda görünür'}</div></div><button data-renamecat="${esc(c.id)}">Adını dəyiş</button><button class="gray" data-togglecat="${esc(c.id)}">${c.visible===false?'Göstər':'Gizlət'}</button><button class="gray" data-catup="${esc(c.id)}" ${i===0?'disabled':''}>↑</button><button class="gray" data-catdown="${esc(c.id)}" ${i===cats.length-1?'disabled':''}>↓</button><button class="danger" data-delcat="${esc(c.id)}">Sil</button></div>`).join('');$('categoryId').innerHTML='<option value="">Kateqoriya seçin</option>'+cats.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''); $('bulkCategory').innerHTML='<option value="">Kateqoriya seçin</option>'+cats.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''); $('bulkCategoryEdit').innerHTML='<option value="">Kateqoriya seçin</option>'+cats.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''); const oldFilter=$('adminCategoryFilter').value; $('adminCategoryFilter').innerHTML='<option value="">Bütün kateqoriyalar</option>'+cats.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''); $('adminCategoryFilter').value=oldFilter;},e=>msg(e.message));onSnapshot(productsRef,s=>{products=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.sortOrder??999999)-(b.sortOrder??999999)||String(a.title||'').localeCompare(String(b.title||''),'az'));renderProducts();renderRecovered();},e=>msg(e.message));}
+function subscribe(){onSnapshot(categoriesRef,s=>{cats=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.sortOrder??999999)-(b.sortOrder??999999));$('cats').innerHTML=cats.map((c,i)=>`<div class="item"><div class="grow"><b>${esc(c.name)}</b><div class="small">${c.visible===false?'Saytda gizlidir':'Saytda görünür'}</div></div><button data-renamecat="${esc(c.id)}">Adını dəyiş</button><button class="gray" data-togglecat="${esc(c.id)}">${c.visible===false?'Göstər':'Gizlət'}</button><button class="gray" data-catup="${esc(c.id)}" ${i===0?'disabled':''}>↑</button><button class="gray" data-catdown="${esc(c.id)}" ${i===cats.length-1?'disabled':''}>↓</button><button class="danger" data-delcat="${esc(c.id)}">Sil</button></div>`).join('');$('categoryId').innerHTML='<option value="">Kateqoriya seçin</option>'+cats.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''); $('bulkCategory').innerHTML='<option value="">Kateqoriya seçin</option>'+cats.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''); const oldFilter=$('adminCategoryFilter').value; $('adminCategoryFilter').innerHTML='<option value="">Bütün kateqoriyalar</option>'+cats.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''); $('adminCategoryFilter').value=oldFilter;},e=>msg(e.message));onSnapshot(productsRef,s=>{products=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.sortOrder??999999)-(b.sortOrder??999999)||String(a.title||'').localeCompare(String(b.title||''),'az'));renderProducts();renderRecovered();},e=>msg(e.message));}
 function renderRecovered(){const list=products.filter(p=>p.source==='shopify'&&p.pendingReview===true);$('recoveredCount').textContent=`${list.length} məhsul yoxlanış gözləyir`;$('recoveredProducts').innerHTML=list.map(p=>`<div class="item"><img src="${esc(p.image||'')}" onerror="this.style.display='none'"><div class="grow"><b>${esc(p.title||'Adsız məhsul')}</b><div class="small">Kod: ${esc(p.code||p.id)} · ${p.price==null?'Qiymət yoxdur':esc(p.price)+' AZN'} · Shopify ID: ${esc(p.shopifyId||'')}</div><div class="small">Bu məhsul əsas kataloqda görünmür.</div></div><button data-recover-show="${esc(p.id)}">Yoxladım — göstər</button><button class="gray" data-recover-keep="${esc(p.id)}">Gizli saxla</button></div>`).join('')||'<p class="small">Gizli kataloqda yoxlanış gözləyən məhsul yoxdur.</p>';}
 $('recoveredProducts').onclick=async e=>{const id=e.target.dataset.recoverShow||e.target.dataset.recoverKeep;if(!id)return;try{if(e.target.dataset.recoverShow){await updateDoc(productDoc(id),{pendingReview:false,visible:true,updatedAt:serverTimestamp(),updatedBy:auth.currentUser?.email||''});msg('Məhsul əsas kataloqa əlavə edildi.');}else{await updateDoc(productDoc(id),{pendingReview:false,visible:false,updatedAt:serverTimestamp(),updatedBy:auth.currentUser?.email||''});msg('Məhsul gizli arxivdə saxlanıldı.');} }catch(err){msg('Əməliyyat alınmadı: '+err.message)}};
 $('catForm').onsubmit=async e=>{e.preventDefault();try{await addDoc(categoriesRef,{name:$('catName').value.trim(),visible:true,sortOrder:cats.length,createdAt:serverTimestamp()});await audit('category.create',`Kateqoriya əlavə edildi: ${$('catName').value.trim()}`);$('catName').value='';msg('Kateqoriya əlavə edildi.');}catch(err){msg(err.message)}};
@@ -31,35 +31,6 @@ $('filter').oninput=renderProducts; $('adminCategoryFilter').onchange=renderProd
 async function bulkUpdate(fields,success){const ids=[...document.querySelectorAll('[data-pick]:checked')].map(x=>x.dataset.pick);if(!ids.length){msg('Əvvəlcə məhsul seçin.');return;}try{for(const id of ids)await updateDoc(productDoc(id),{...fields,updatedAt:serverTimestamp(),updatedBy:auth.currentUser?.email||''});msg(`${ids.length} məhsul yeniləndi. ${success}`);renderProducts();}catch(err){msg('Əməliyyat alınmadı: '+err.message);}}
 $('bulkAssign').onclick=()=>{const categoryId=$('bulkCategory').value;if(!categoryId){msg('Təyin ediləcək kateqoriyanı seçin.');return;}bulkUpdate({categoryId},'Kateqoriya təyin edildi.');};
 $('bulkHide').onclick=()=>bulkUpdate({visible:false},'Seçilənlər gizlədildi.');$('bulkShow').onclick=()=>bulkUpdate({visible:true},'Seçilənlər aktiv edildi.');
-// Safe multi-product editor: only explicitly checked fields are written.
-const bulkValueIds={title:'bulkTitle',code:'bulkCode',price:'bulkPrice',oldPrice:'bulkOldPrice',stock:'bulkStock',size:'bulkSize',priceUnit:'bulkPriceUnit',categoryId:'bulkCategoryEdit',image:'bulkImage',shortDescription:'bulkShortDescription',description:'bulkDescription',seoTitle:'bulkSeoTitle',seoDescription:'bulkSeoDescription',seoSlug:'bulkSeoSlug',visible:'bulkVisible',featured:'bulkFeatured',seoEnabled:'bulkSeoEnabled'};
-function clearBulkEditor(){document.querySelectorAll('[data-bulk-field]').forEach(x=>x.checked=false);Object.values(bulkValueIds).forEach(id=>{const el=$(id);if(el)el.value='';});$('bulkPriceUnit').value='ədəd';$('bulkVisible').value='true';$('bulkFeatured').value='true';$('bulkSeoEnabled').value='true';$('bulkEditStatus').textContent='';}
-$('clearBulkEdit').onclick=clearBulkEditor;
-$('applyBulkEdit').onclick=async()=>{
- const ids=[...document.querySelectorAll('[data-pick]:checked')].map(x=>x.dataset.pick);
- const selectedFields=[...document.querySelectorAll('[data-bulk-field]:checked')].map(x=>x.dataset.bulkField);
- const out=$('bulkEditStatus');
- if(!ids.length){out.textContent='Əvvəlcə məhsul seçin.';return;}
- if(!selectedFields.length){out.textContent='Dəyişmək istədiyiniz sahələri işarələyin.';return;}
- const patch={};
- for(const field of selectedFields){const el=$(bulkValueIds[field]);let value=el.value;
-  if(['price','oldPrice','stock'].includes(field)){if(value===''){patch[field]=null;}else{const n=Number(value);if(!Number.isFinite(n)||n<0){out.textContent='Qiymət və stok üçün sıfırdan kiçik olmayan düzgün rəqəm daxil edin.';return;}patch[field]=n;}}
-  else if(['visible','featured','seoEnabled'].includes(field))patch[field]=value==='true';
-  else if(field==='seoSlug')patch[field]=seoSlugify(value);
-  else patch[field]=value.trim();
- }
- if(patch.categoryId===''){out.textContent='Kateqoriya sahəsini dəyişmək üçün kateqoriya seçin.';return;}
- if(!confirm(`${ids.length} məhsulda ${selectedFields.length} sahə dəyişdirilsin? İşarələnməyən sahələr toxunulmaz qalacaq.`))return;
- const btn=$('applyBulkEdit');btn.disabled=true;out.textContent='Yenilənir...';
- try{
-  // Firestore batch limit is 500 writes; use conservative chunks.
-  for(let i=0;i<ids.length;i+=400){const batch=writeBatch(db);ids.slice(i,i+400).forEach(id=>batch.update(productDoc(id),{...patch,updatedAt:serverTimestamp(),updatedBy:auth.currentUser?.email||''}));await batch.commit();}
-  await audit('product.bulk.update',`${ids.length} məhsulda sahələr yeniləndi: ${selectedFields.join(', ')}`);
-  out.textContent=`Uğurlu: ${ids.length} məhsul yeniləndi.`;msg(`${ids.length} məhsul kütləvi redaktə edildi.`);clearBulkEditor();renderProducts();
- }catch(err){out.textContent='Yeniləmə xətası: '+(err.message||err);msg('Kütləvi redaktə tamamlanmadı: '+(err.message||err));}
- finally{btn.disabled=false;}
-};
-
 $('selectFiltered').onclick=()=>{document.querySelectorAll('[data-pick]').forEach(x=>x.checked=true);updateSelectionCount();};$('clearSelection').onclick=()=>{document.querySelectorAll('[data-pick]').forEach(x=>x.checked=false);updateSelectionCount();};
 $('products').addEventListener('change',e=>{if(e.target.matches('[data-pick]'))updateSelectionCount();});
 ['filter','adminCategoryFilter','statusFilter','priceMin','priceMax','sortFilter'].forEach(id=>{const el=$(id);el.addEventListener(id==='filter'||id==='priceMin'||id==='priceMax'?'input':'change',renderProducts);});
@@ -89,6 +60,14 @@ loadActivity();
 
 // Shopify public catalog importer. Triggered manually by the signed-in admin.
 const SHOPIFY_PRODUCTS_URL = 'https://decorconcept.az/products.json?limit=250&page=';
+// Shopify export may provide tags as a comma-separated string OR an array.
+// Normalize both forms so an unexpected shape cannot stop the whole import.
+function normalizeShopifyTags(value) {
+  if (Array.isArray(value)) return value.map(v => String(v ?? '').trim()).filter(Boolean);
+  if (typeof value === 'string') return value.split(',').map(v => v.trim()).filter(Boolean);
+  if (value == null) return [];
+  return [String(value).trim()].filter(Boolean);
+}
 $('shopifySync').addEventListener('click', async () => {
   const btn = $('shopifySync'), out = $('syncStatus');
   btn.disabled = true; out.textContent = ' Shopify məhsulları yoxlanılır...';
@@ -118,7 +97,7 @@ $('shopifySync').addEventListener('click', async () => {
           shortDescription: body.slice(0, 180),
           description: item.body_html || '',
           size: old.size || '',
-          categoryId: old.categoryId || (cats.find(c => [item.product_type, ...(item.tags||'').split(',')].filter(Boolean).some(v => v.trim().toLocaleLowerCase('az') === String(c.name||'').trim().toLocaleLowerCase('az')))?.id || ''),
+          categoryId: old.categoryId || (cats.find(c => [String(item.product_type || '').trim(), ...normalizeShopifyTags(item.tags)].filter(Boolean).some(v => v.toLocaleLowerCase('az') === String(c.name||'').trim().toLocaleLowerCase('az')))?.id || ''),
           visible: old.id ? old.visible !== false : false,
           pendingReview: old.id ? (old.pendingReview === true) : true,
           sortOrder: old.sortOrder ?? (seen + imported),
