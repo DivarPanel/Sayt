@@ -235,15 +235,86 @@ body.modal-open{overflow:hidden}
 @media(max-width:760px){.detail-navigation{margin-bottom:16px;padding-bottom:12px}.detail-home{padding:9px 11px}.detail-category-picker{gap:6px}.detail-category-picker label{display:none}.detail-category-picker select{width:min(58vw,240px);font-size:11px}.detail-related{margin-top:24px;padding-top:18px}.detail-related-heading h3{font-size:18px}.detail-related-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.related-photo{height:120px}.related-name{font-size:11px;min-height:32px}.related-price{font-size:12px}}
 
 /* REGISTERED CUSTOMER CART + SHAREABLE ORDER */
-.customer-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 22px;padding:12px;border:1px solid #c9a85e44;border-radius:14px;background:#111720}
+.customer-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 22px;padding:10px;border:1px solid #c9a85e66;border-radius:14px;background:#111720ee;backdrop-filter:blur(14px);box-shadow:0 8px 28px #0008}.customer-tools-header{position:fixed;top:12px;right:max(16px,calc((100vw - 1240px)/2));z-index:90;margin:0;padding:7px 9px;flex-wrap:nowrap}.customer-tools-header #customerStatus{display:none}.customer-tools-header button{white-space:nowrap;padding:10px 13px}.customer-tools-header #customerCartBtn{border-color:#c9a85e;background:#202833;color:#f2d895}.customer-tools-header #cartCount{display:inline-grid;place-items:center;min-width:21px;height:21px;padding:0 5px;margin-left:4px;border-radius:99px;background:#d6b36a;color:#17130c;font-size:11px}.nav{padding-right:330px}@media(max-width:700px){.nav{padding-right:0}.customer-tools-header{top:auto;right:10px;bottom:12px;top:12px;padding:5px;gap:5px}.customer-tools-header button{padding:9px 10px;font-size:11px}.customer-tools-header #customerAccountBtn{max-width:118px;overflow:hidden;text-overflow:ellipsis}.customer-tools-header #customerCartBtn{min-width:95px}.customer-tools-header #customerStatus{display:none}}
 .customer-tools button,.customer-primary{border:1px solid #c9a85e88;border-radius:10px;padding:11px 16px;background:linear-gradient(120deg,#e4c77f,#ad813d);color:#17130c;font-weight:800;cursor:pointer}
 .customer-tools #customerCartBtn{background:#202833;color:#f2d895}.customer-tools #customerStatus{font-size:11px;color:#b8b0a2;margin-left:auto}
 .customer-overlay{display:none;position:fixed;inset:0;z-index:100;background:#05080ddd;padding:18px;overflow:auto;align-items:center;justify-content:center}.customer-overlay.open{display:flex}.customer-panel{width:min(620px,100%);max-height:90vh;overflow:auto;position:relative;padding:28px;background:#121821;border:1px solid #c9a85e77;border-radius:18px;box-shadow:0 25px 80px #000b;color:#f4eddf}.customer-panel h2{margin:0 45px 10px 0;color:#f0d18a}.customer-panel p{color:#b8b1a5;font-size:13px;line-height:1.6}.customer-close{position:absolute;right:15px;top:15px;border:0;border-radius:50%;width:36px;height:36px;background:#2a3039;color:#fff;cursor:pointer}.customer-panel label{display:block;margin:13px 0;color:#cfc5b1;font-size:12px}.customer-panel input{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid #414956;border-radius:9px;background:#0d1219;color:#fff}.customer-tabs{display:flex;gap:8px;margin:18px 0}.customer-tabs button{padding:9px 15px;border:1px solid #5a4b2e;background:#1c2430;color:#e9d6a9;border-radius:9px}.customer-tabs button.active{background:#d6b36a;color:#17130c}.customer-error{color:#ffb5a9!important;overflow-wrap:anywhere}.cart-row{display:grid;grid-template-columns:minmax(0,1fr) 85px 34px;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid #ffffff18}.cart-row b,.cart-row small{display:block}.cart-row small{font-size:11px;color:#a9a293;margin-top:5px}.cart-row input{margin:0}.cart-row button{border:0;border-radius:8px;background:#482b2b;color:#fff;padding:9px}.cart-total{padding:16px 0;color:#f0d18a;font-weight:800}.customer-primary:disabled{opacity:.45;cursor:not-allowed}.detail-cart-add{display:flex;align-items:end;gap:10px;margin:16px 0}.detail-cart-add label{font-size:11px;color:#b9ad96}.detail-cart-add input{display:block;width:90px;margin-top:6px;padding:12px;border:1px solid #c9a85e66;border-radius:9px;background:#111720;color:#fff}.detail-cart-add button{flex:1;padding:13px;border:1px solid #c9a85e;background:#252b33;color:#f1d18a;border-radius:10px;font-weight:800;cursor:pointer}
-@media(max-width:700px){.customer-tools{align-items:stretch}.customer-tools button{flex:1}.customer-tools #customerStatus{width:100%;margin:0}.customer-overlay{padding:8px;align-items:flex-end}.customer-panel{max-height:92dvh;border-radius:18px 18px 10px 10px;padding:22px 16px}.detail-cart-add{align-items:stretch}.detail-cart-add input{width:78px}}
+@media(max-width:700px){.customer-tools:not(.customer-tools-header){align-items:stretch}.customer-tools:not(.customer-tools-header) button{flex:1}.customer-tools:not(.customer-tools-header) #customerStatus{width:100%;margin:0}.customer-overlay{padding:8px;align-items:flex-end}.customer-panel{max-height:92dvh;border-radius:18px 18px 10px 10px;padding:22px 16px}.detail-cart-add{align-items:stretch}.detail-cart-add input{width:78px}}
 
 
 .catalog-share-link{border:1px solid #b99550;background:linear-gradient(135deg,#d9bb79,#b68b3d);color:#17130c;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer;white-space:nowrap}.catalog-share-link:hover{filter:brightness(1.08)}@media(max-width:700px){.catalog-share-link{width:100%;grid-column:1/-1}}
-</style></head><body><header class="top"><div class="shell"><nav class="nav"><div><div class="brand" id="siteBrand">Divar<span>Panel.az</span></div><div class="tagline">İNTERYER · EKSTERYER · DEKOR</div></div><details class="site-menu" open><summary aria-label="Menyunu aç və ya bağla">☰ MENYU</summary><div class="navlinks"><a href="./index.html">Ana səhifə</a><a href="#catalogTitle">Məhsullar</a><a href="#categoryShowcase">Kateqoriyalar</a><a href="#projectsSection">Layihələr</a><a href="#siteContact">Əlaqə</a><a class="adminlink" href="./admin.html">Admin ↗</a></div></details></nav><section class="hero"><div class="hero-copy"><div class="eyebrow" id="siteEyebrow">MÜASİR DİZAYN HƏLLƏRİ</div><h1 id="siteHeadline">Divarlarınızda<br><em>fərqi hiss edin.</em></h1><p id="siteIntro">Dekorativ panellər və memarlıq həlləri ilə məkanınıza xarakter qatın.</p><a class="hero-cta" href="#catalogTitle">Kataloqa bax <span>↗</span></a><div class="hero-proof"><span>✦ Keyfiyyətli materiallar</span><span>✦ İnteryer və eksteryer</span></div></div><div class="hero-collage" id="heroCollage" aria-label="Məhsul kolleksiyası"><div class="collage-tile tile-main"><span>DIVARPANEL COLLECTION</span></div><div class="collage-tile tile-two"></div><div class="collage-tile tile-three"></div><div class="collage-tile tile-four"></div><div class="collage-dots"><i class="active"></i><i></i><i></i></div></div></section></div></header><main class="shell wrap">
+
+
+/* DIVARPANEL — LUXURY INTERIOR MARKETPLACE (approved visual direction) */
+:root{--ink:#26231f;--muted:#777168;--line:#e6e0d7;--bg:#f6f3ed;--gold:#b58a32;--blue:#262523;--white:#fff}
+html{scroll-behavior:smooth;scroll-padding-top:110px}
+body{background:#f6f3ed;color:#26231f;font-family:Manrope,Arial,sans-serif}
+.top{background:#fff;color:#292722;overflow:visible;border-bottom:1px solid #e8e1d6;box-shadow:0 5px 24px #2820160b}
+.top:after{display:none}
+.utility-bar{background:#242321;color:#eee8dd;font-size:11px;letter-spacing:.025em}
+.utility-inner{min-height:34px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.utility-lang{font-weight:800;color:#e5c477}
+.nav{height:88px;padding-right:0;border:0;gap:24px;position:sticky;top:0;background:#fff;z-index:60}
+.top>.shell{position:relative}
+.brand{font-size:29px;color:#242321;letter-spacing:-.035em}.brand span{color:#b58a32}
+.tagline{font-size:10px;color:#81796e;letter-spacing:.17em}
+.navlinks{gap:clamp(12px,2vw,27px)}
+.navlinks>a:not(.adminlink){color:#514b42;font-size:11px;letter-spacing:.035em;text-transform:none}
+.navlinks>a:not(.adminlink):hover{color:#a77b26}
+.adminlink{border:1px solid #d7c8a9;background:#faf7f0;color:#5d4928;border-radius:8px;box-shadow:none;padding:10px 14px}
+.site-menu>summary{color:#5c4a2a;background:#f7f1e5;border-color:#e1d2b3}
+.customer-tools-header{position:static;z-index:auto;margin:0;padding:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none;gap:8px;flex-wrap:nowrap}
+.customer-tools-header #customerStatus{display:none}
+.customer-tools-header button{border-radius:9px;padding:11px 13px;font-size:12px;white-space:nowrap}
+.customer-tools-header #customerAccountBtn{background:#fff;border:1px solid #ded5c7;color:#39342c}
+.customer-tools-header #customerCartBtn{background:#252421;border:1px solid #252421;color:#fff}
+.customer-tools-header #cartCount{background:#d9b65f;color:#201b12}
+.hero{min-height:480px;padding:0;display:grid;grid-template-columns:.82fr 1.18fr;gap:0;align-items:stretch;background:#eee8dd;overflow:hidden}
+.hero-copy{padding:66px clamp(28px,5vw,76px);max-width:none;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;background:linear-gradient(120deg,#f2ede4,#e8dfd1)}
+.eyebrow{font-size:11px;color:#94702e;letter-spacing:.22em}
+.hero h1{font-size:clamp(42px,5.3vw,72px);line-height:1.02;letter-spacing:-.055em;text-transform:none;color:#292722;margin:18px 0 17px;max-width:600px}
+.hero h1 em{color:#b28a3d;font-style:normal}
+.hero p{font-size:16px;line-height:1.75;color:#6d665c;max-width:470px}
+.hero-cta{background:linear-gradient(120deg,#e5c879,#b58a32);color:#211b10;border-radius:9px;padding:16px 22px;box-shadow:0 9px 22px #9e79232b;text-transform:none;font-size:13px;letter-spacing:.025em}
+.hero-proof{color:#81786c;font-size:11px;gap:18px}
+.hero-collage{height:auto;min-height:480px;gap:8px;padding:8px;background:#e6ded2;grid-template-columns:1.2fr .8fr;grid-template-rows:1fr 1fr}
+.collage-tile{border:0;box-shadow:none;border-radius:3px;background-color:#d8d0c5}
+.tile-main{background-image:linear-gradient(0deg,#1d1a1640,transparent 50%),url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1400&q=90')}
+.tile-two{background-image:url('https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=88')}
+.tile-three{background-image:url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=88')}
+.tile-four{background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=88')}
+.collage-tile:hover{transform:scale(1.01);border-color:transparent}
+.wrap{max-width:1440px;padding:38px 28px 64px;background:#f6f3ed}
+.sectionhead{border:0;padding:0 0 13px;margin:30px 0 18px}
+.sectionhead h2{font-size:27px;letter-spacing:-.035em;text-transform:none;color:#292722}
+.sectionhead p{font-size:13px;color:#81796f}
+.section-link{color:#89651f;font-size:13px}
+.category-showcase-grid,.projects-grid{gap:14px}
+.signature-categories{gap:14px}
+.signature-category,.category-showcase-grid .project-card{border-radius:14px;overflow:hidden;border:1px solid #e5ded2;box-shadow:0 8px 22px #392b160d;background:#fff}
+.category-showcase-grid .project-card:hover,.signature-category:hover{transform:translateY(-4px);box-shadow:0 15px 30px #392b1618}
+.cats{gap:9px}.catpill{background:#fff;border:1px solid #e4ddd2;color:#5b544a;border-radius:999px;padding:10px 16px}.catpill.active{background:#292722;color:#f5e8c9;border-color:#292722}
+.tools{grid-template-columns:minmax(240px,1fr) 230px 190px;gap:12px;margin:18px 0 22px}
+.field,select{background:#fff;border:1px solid #e2dbd0;border-radius:10px;color:#292722;min-height:48px}.field::placeholder{color:#9b9388}
+.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.card,.featurecard{background:#fff;border:1px solid #e9e2d8;border-radius:13px;box-shadow:0 8px 24px #382a160c;color:#292722;animation:none}
+.card:hover,.featurecard:hover{border-color:#d1b36d;box-shadow:0 16px 34px #382a1618;transform:translateY(-4px)}
+.photo{height:260px;background:#eee9e1}.photo img{object-fit:cover}
+.info{padding:16px}.info h3{font-size:14px;color:#302d28}.badge{background:#f5eddd;color:#8b682c;border-radius:5px}
+.price,.newprice{color:#9a7125}.muted{color:#837b70}
+.featurecard{padding:12px}.featurecard .photo{height:220px;border-radius:9px}.featuretag{background:#292722;color:#f4d995;border-radius:5px}
+.oldprice{color:#999}.discount{border-radius:5px}
+.status{color:#777168}
+.foot{background:#242321;color:#d5cbbd;border-top:0;padding:32px 0}
+.dialog{background:#fff;color:#292722;border:1px solid #e3d8c5;box-shadow:0 25px 80px #21180f40}
+.close{background:#f0ece5;color:#39342c}.wa{background:#d6b35f;color:#211b10}
+.customer-overlay{background:#1e1a16b8}.customer-panel{background:#fff;color:#292722;border:1px solid #e3d6bd}.customer-panel h2{color:#8e6827}.customer-panel p{color:#71695e}.customer-panel label{color:#625a50}.customer-panel input{background:#fbfaf7;color:#292722;border-color:#ded5c8}.customer-tabs button{background:#f5f0e7;color:#5d4a2a;border-color:#dfd1b4}.customer-tabs button.active{background:#d7b65f;color:#241d10}.cart-row{border-color:#eee7dc}.cart-row small{color:#82796e}.cart-total{color:#906b25}.customer-tools button,.customer-primary{background:#d7b65f;color:#241d10;border-color:#c7a24d}
+.ai-assist{background:#f5efe4;border:1px solid #e0d1b5;box-shadow:none}.ai-assist h3{color:#73551f}.ai-assist p{color:#71685c}.ai-assist button{background:#d7b65f;color:#241d10;box-shadow:none}.ai-assist a{color:#876222}
+@media(max-width:1050px){.nav{height:auto;min-height:82px;flex-wrap:wrap;padding:14px 0}.customer-tools-header{margin-left:auto}.hero{grid-template-columns:.9fr 1.1fr}.hero-copy{padding:42px 30px}.hero-collage{min-height:410px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.utility-inner{justify-content:center;gap:6px 14px;padding:7px 0;font-size:10px}.utility-inner span:first-child{width:100%;text-align:center}.nav{position:relative;gap:10px;min-height:0;padding:14px 0;align-items:center}.brand{font-size:23px}.tagline{font-size:9px}.customer-tools-header{order:3;width:100%;justify-content:flex-end;margin:0}.customer-tools-header button{flex:1;padding:10px 9px;font-size:11px}.site-menu{order:2}.site-menu>summary{border-radius:8px;background:#f7f1e5;color:#5c4a2a}.site-menu[open] .navlinks{background:#fff;border:1px solid #e5ddcf;box-shadow:0 15px 35px #392b1620}.navlinks>a:not(.adminlink){border-color:#eee6da;color:#50483d}.navlinks .adminlink{background:#f7f1e5;color:#6b5124;border-color:#e4d5b4}.hero{grid-template-columns:1fr;min-height:0}.hero-copy{padding:38px 22px 34px}.hero h1{font-size:clamp(38px,10vw,52px)}.hero p{font-size:14px}.hero-collage{min-height:300px;height:300px;padding:6px}.wrap{padding:22px 15px 42px}.sectionhead h2{font-size:23px}.tools{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.photo{height:clamp(145px,44vw,190px)}.info{padding:11px}.info h3{font-size:12px}.price{font-size:16px}.featurecard .photo{height:160px}.footrow{display:flex;flex-direction:column;align-items:flex-start}}
+@media(max-width:380px){.customer-tools-header button{font-size:10px;padding:9px 6px}.hero h1{font-size:36px}.hero-collage{height:240px;min-height:240px}}
+
+</style></head><body><header class="top"><div class="utility-bar"><div class="shell utility-inner"><span>⌖ Ekologiya postu ilə üzbəüz · Mağaza №228</span><span>☎ 055 203 22 71</span><span>WhatsApp · 070 228 36 82</span><span class="utility-lang">AZ / RU</span></div></div><div class="shell"><nav class="nav"><div><div class="brand" id="siteBrand">Divar<span>Panel.az</span></div><div class="tagline">İNTERYER · EKSTERYER · DEKOR</div></div><details class="site-menu" open><summary aria-label="Menyunu aç və ya bağla">☰ MENYU</summary><div class="navlinks"><a href="./index.html">Ana səhifə</a><a href="#catalogTitle">Məhsullar</a><a href="#categoryShowcase">Kateqoriyalar</a><a href="#projectsSection">Layihələr</a><a href="#siteContact">Əlaqə</a></div></details></nav><section class="hero"><div class="hero-copy"><div class="eyebrow" id="siteEyebrow">MÜASİR DİZAYN HƏLLƏRİ</div><h1 id="siteHeadline">Divarlarınızda<br><em>fərqi hiss edin.</em></h1><p id="siteIntro">Dekorativ panellər və memarlıq həlləri ilə məkanınıza xarakter qatın.</p><a class="hero-cta" href="#catalogTitle">Kataloqa bax <span>↗</span></a><div class="hero-proof"><span>✦ Keyfiyyətli materiallar</span><span>✦ İnteryer və eksteryer</span></div></div><div class="hero-collage" id="heroCollage" aria-label="Məhsul kolleksiyası"><div class="collage-tile tile-main"><span>DIVARPANEL COLLECTION</span></div><div class="collage-tile tile-two"></div><div class="collage-tile tile-three"></div><div class="collage-tile tile-four"></div><div class="collage-dots"><i class="active"></i><i></i><i></i></div></div></section></div></header><main class="shell wrap">
 <section id="categoryShowcase">
 <div class="sectionhead"><div><h2>Kateqoriyalar</h2><p>Məhsul qruplarımıza nəzər salın</p></div><a class="section-link" href="#catalogTitle">Bütün kateqoriyalar ↗</a></div>
 <div id="categoryShowcaseGrid" class="projects-grid category-showcase-grid"></div>
