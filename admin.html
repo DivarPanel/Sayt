@@ -225,4 +225,46 @@ html,body{max-width:100%;overflow-x:hidden}body{min-width:320px}.wrap,.panel,#ap
 </div>
 <div class="toolbar"><button type="button" id="applyBulkEdit">Seçilmiş məhsullara tətbiq et</button><button type="button" class="gray" id="clearBulkEdit">Sahələri təmizlə</button><span id="bulkEditStatus" class="small" aria-live="polite"></span></div>
 </section>
-<h3>Məhsulların siyahısı</h3><div id="products"></div></section></div></div></main><script type="module" src="./admin.js"></script><script type="module" src="./business-modules.js"></script></body></html>
+<h3>Məhsulların siyahısı</h3><div id="products"></div></section></div></div>
+<section id="businessModules" class="admin-section" style="margin:28px 0;padding:24px;border:1px solid #b58a3b;border-radius:18px;background:#171614;color:#f5ead2">
+  <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+    <div><small style="color:#c9a45a;letter-spacing:.14em">DIVARPANEL · BİZNES İDARƏETMƏSİ</small><h2 style="margin:8px 0">Biznes modulları</h2><p style="color:#b9ad98;margin:0">Filiallar, ustalar, xidmətlər, sifarişlər, CRM və tərcümələr</p></div>
+    <span style="color:#c9a45a">Super Admin</span>
+  </div>
+  <div class="bm-tabs" style="display:flex;flex-wrap:wrap;gap:8px;margin:20px 0">
+    <button type="button" data-bm-tab="branches">Filiallar</button>
+    <button type="button" data-bm-tab="masters">Ustalar</button>
+    <button type="button" data-bm-tab="serviceTypes">Xidmət növləri</button>
+    <button type="button" data-bm-tab="serviceOrders">Xidmət sifarişləri</button>
+    <button type="button" data-bm-tab="orders">Satış sifarişləri</button>
+    <button type="button" data-bm-tab="quotes">Qiymət təklifləri</button>
+    <button type="button" data-bm-tab="discountRules">Endirim qaydaları</button>
+    <button type="button" data-bm-tab="translations">AZ / RU</button>
+    <button type="button" data-bm-tab="wishlists">Favorilər</button>
+    <button type="button" data-bm-tab="customerRequests">Müştəri müraciətləri</button>
+    <button type="button" data-bm-tab="notifications">Bildirişlər</button>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(280px, .9fr) minmax(320px,1.1fr);gap:22px">
+    <div style="background:#211f1b;border:1px solid #51422b;border-radius:14px;padding:18px">
+      <h3 id="bmTitle">Filiallar</h3>
+      <form id="bmForm"><input type="hidden" id="bmRecordId"><div id="bmFormFields" style="display:grid;gap:10px"></div>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button id="bmSave" type="submit">Yadda saxla</button><button id="bmReset" type="button">Təmizlə</button></div>
+      </form><p id="bmStatus" role="status" style="color:#d8bd7a"></p>
+    </div>
+    <div style="background:#211f1b;border:1px solid #51422b;border-radius:14px;padding:18px">
+      <h3 id="bmListTitle">Filiallar siyahısı</h3><div id="bmList">Məlumat yüklənir...</div>
+    </div>
+  </div>
+</section>
+<style>
+#businessModules input,#businessModules textarea,#businessModules select{width:100%;box-sizing:border-box;background:#12110f;color:#f5ead2;border:1px solid #655334;border-radius:8px;padding:10px}
+#businessModules label{display:grid;gap:5px;color:#dfd1b6;font-size:13px}
+#businessModules button{background:#b58a3b;color:#17130b;border:0;border-radius:8px;padding:9px 13px;font-weight:700;cursor:pointer}
+#businessModules [data-bm-tab]{background:#29251e;color:#e9d6ad;border:1px solid #655334}
+#businessModules [data-bm-tab].active{background:#b58a3b;color:#17130b}
+#businessModules .bm-record{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #51422b}
+#businessModules .bm-record small{display:block;color:#b9ad98;margin-top:4px}
+#businessModules .bm-actions{display:flex;gap:6px;flex-wrap:wrap}
+@media(max-width:760px){#businessModules>div:nth-of-type(2){grid-template-columns:1fr!important}}
+</style>
+</main><script type="module" src="./admin.js"></script><script type="module" src="./business-modules.js"></script></body></html>
