@@ -1,19 +1,33 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isAdmin() { return request.auth != null && request.auth.token.email == 'behram.krmv.99@gmail.com'; }
-    match /products/{productId} { allow read: if true; allow write: if isAdmin(); }
-    match /categories/{categoryId} { allow read: if true; allow write: if isAdmin(); }
-    match /projects/{projectId} { allow read: if true; allow create, update, delete: if isAdmin(); }
-    match /settings/{settingId} { allow read: if settingId == 'catalog' || isAdmin(); allow write: if isAdmin(); }
-    match /sharedCatalogs/{catalogId} { allow read: if true; allow create, update, delete: if isAdmin(); }
-    match /customerProfiles/{uid} { allow read, create, update: if request.auth != null && request.auth.uid == uid; allow delete: if isAdmin(); }
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.email == 'behram.krmv.99@gmail.com'; }
+    function owns(uid) { return signedIn() && request.auth.uid == uid; }
+    match /products/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /categories/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /projects/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /settings/{id} { allow read: if id == 'catalog' || isAdmin(); allow write: if isAdmin(); }
+    match /sharedCatalogs/{id} { allow read: if true; allow write: if isAdmin(); }
+    match /translations/{id} { allow read: if resource.data.active != false || isAdmin(); allow write: if isAdmin(); }
+    match /branches/{id} { allow read: if resource.data.visible == true || isAdmin(); allow write: if isAdmin(); }
+    match /serviceTypes/{id} { allow read: if resource.data.visible == true || isAdmin(); allow write: if isAdmin(); }
+    match /masters/{id} { allow read: if resource.data.active == true || isAdmin(); allow write: if isAdmin(); }
+    match /serviceOrders/{id} { allow read: if isAdmin() || owns(resource.data.customerUid); allow update: if isAdmin() || (owns(resource.data.customerUid) && request.resource.data.customerUid == resource.data.customerUid); allow create: if isAdmin() || (signedIn() && request.resource.data.customerUid == request.auth.uid); allow delete: if isAdmin(); }
+    match /orders/{id} { allow read: if isAdmin() || owns(resource.data.customerUid); allow update: if isAdmin() || (owns(resource.data.customerUid) && request.resource.data.customerUid == resource.data.customerUid); allow create: if isAdmin() || (signedIn() && request.resource.data.customerUid == request.auth.uid); allow delete: if isAdmin(); }
+    match /quotes/{id} { allow read: if isAdmin() || owns(resource.data.customerUid); allow update: if isAdmin() || (owns(resource.data.customerUid) && request.resource.data.customerUid == resource.data.customerUid); allow create: if isAdmin() || (signedIn() && request.resource.data.customerUid == request.auth.uid); allow delete: if isAdmin(); }
+    match /customerRequests/{id} { allow read, update, delete: if isAdmin(); allow create: if isAdmin() || (signedIn() && request.resource.data.customerUid == request.auth.uid); }
+    match /customerNotifications/{id} { allow read, update: if isAdmin() || owns(resource.data.customerUid); allow create, delete: if isAdmin(); }
+    match /wishlists/{id} { allow read: if isAdmin() || owns(resource.data.customerUid); allow update: if isAdmin() || (owns(resource.data.customerUid) && request.resource.data.customerUid == resource.data.customerUid); allow create: if isAdmin() || (signedIn() && request.resource.data.customerUid == request.auth.uid); allow delete: if isAdmin() || owns(resource.data.customerUid); }
+    match /discountRules/{id} { allow read: if isAdmin(); allow write: if isAdmin(); }
     match /cartShares/{token} {
-      allow create: if request.auth != null && request.resource.data.ownerUid == request.auth.uid && request.resource.data.items is list;
-      allow get: if (request.auth != null && resource.data.ownerUid == request.auth.uid) || (resource.data.status == 'new' && request.time < resource.data.expiresAt);
-      allow list: if request.auth != null && (isAdmin() || resource.data.ownerUid == request.auth.uid);
-      allow update, delete: if request.auth != null && (isAdmin() || resource.data.ownerUid == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.ownerUid == request.auth.uid && request.resource.data.items is list;
+      allow get: if (signedIn() && resource.data.ownerUid == request.auth.uid) || (resource.data.status == 'new' && request.time < resource.data.expiresAt);
+      allow list: if isAdmin() || (signedIn() && resource.data.ownerUid == request.auth.uid);
+      allow update, delete: if isAdmin() || (signedIn() && resource.data.ownerUid == request.auth.uid);
     }
-    match /activityLogs/{logId} { allow read, create: if isAdmin(); allow update, delete: if false; }
+    match /customerProfiles/{uid} { allow read, create, update: if owns(uid); allow delete: if isAdmin(); }
+    match /activityLogs/{id} { allow read, create: if isAdmin(); allow update, delete: if false; }
+    match /{document=**} { allow read, write: if false; }
   }
 }
